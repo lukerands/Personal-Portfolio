@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/">
+<meta name="theme-color" id="themeColor" content="#000000">
+<script>
+  // returning visitors (splash already seen this session) never see the splash, not even while the page loads
+  (function(){ var h=document.documentElement; h.className+=" booting";
+    try{ if(sessionStorage.getItem("lr-splash")==="1") h.className+=" nosplash"; }catch(e){} })();
+</script>
+<title>Luke Rands</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff; --ink:#000000; --cobalt:#2438e8; --mist:#e6e8ee; --muted:#5b5f6b;
+  --serif:"Instrument Serif", "Times New Roman", Georgia, serif;
+  --sans:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  --plex:"IBM Plex Serif", Georgia, serif;
+  --sans-ref:"Familjen Grotesk";   /* the original small print: both fonts are calibrated to match it */
+  --helv:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --paper:#000000; --ink:#ffffff; --mist:#1c1d22; --muted:#a3a7b3; }
+}
+:root[data-theme="dark"]{ --paper:#000000; --ink:#ffffff; --mist:#1c1d22; --muted:#a3a7b3; }
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:3px}
+
+/* ---------- bars ---------- */
+.bar{position:fixed;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;pointer-events:none}
+.bar>*{pointer-events:auto}
+.top{top:0;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+.bottom{bottom:0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+.logo{font-family:var(--serif);font-style:italic;font-size:27px;line-height:1;text-decoration:none;letter-spacing:-.01em}
+nav{display:flex;gap:14px;font-size:14px;white-space:nowrap}
+@media (min-width:430px){nav{gap:22px;font-size:15px}}
+@media (max-width:370px){.logo{font-size:23px} nav{gap:10px;font-size:13px}}
+nav a{text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
+nav a[aria-current="true"]{border-bottom-color:currentColor}
+.ig{font-size:15px;text-decoration:none}
+.bar.top{gap:12px}
+/* signature logo: drawn as a mask so it takes the bar's text color on every page */
+.bar .logo{display:block;flex:none;width:122px;aspect-ratio:640/253;font-size:0;
+  background:currentColor;-webkit-mask:url("media/img/dff8088fd701.png") center/contain no-repeat;mask:url("media/img/dff8088fd701.png") center/contain no-repeat}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:540px){.bar .logo{width:100px}}
+@media (max-width:400px){.bar .logo{width:88px}}
+@media (max-width:340px){.bar .logo{width:76px}}
+.logo{white-space:nowrap}
+.say{position:relative;display:inline-block;font-size:14px;line-height:1.2;text-decoration:none;padding:9px 17px 18px;margin-top:9px;background:none;color:inherit;transition:transform .15s ease}
+.say span{position:relative}
+/* outlined speech bubble, tail at bottom right; drawn in the bar's text color */
+.say .bub{position:absolute;inset:0;width:100%;height:100%;overflow:visible;fill:none;stroke-linejoin:miter;stroke:currentColor;stroke-width:1.5}
+.say:hover{transform:translateY(-1px)}
+
+body[data-route="home"] .bar{color:#fff}
+body[data-route="stage"]{background:#000;color:#fff}
+/* about: slate asphalt texture, tuned toward the navy of the portrait vest */
+/* texture at half strength: a 50% veil of its own average color */
+body[data-route="about"],.ap-panel{background-color:#33383f;background-image:linear-gradient(rgba(64,66,73,.5),rgba(64,66,73,.5)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E %3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .82 0 0 0 0 .82 0 0 0 0 .82 0 0 1.4 0 -.58'/%3E %3C/filter%3E %3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='21' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .05 0 0 0 0 .05 0 0 0 0 .06 0 0 -1.5 0 .95'/%3E %3C/filter%3E %3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.4' numOctaves='1' seed='3' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .92 0 0 0 0 .92 0 0 0 0 .9 0 0 12 0 -8.1'/%3E %3C/filter%3E %3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='.38'/%3E %3Crect width='100%25' height='100%25' filter='url(%23b)' opacity='.42'/%3E %3Crect width='100%25' height='100%25' filter='url(%23c)' opacity='.14'/%3E %3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E %3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='4' seed='11' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .65 0 0 0 0 .65 0 0 0 0 .65 0 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .02 .13 .3'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Cfilter id='d' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='4' seed='29' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .04 0 0 0 0 .04 0 0 0 0 .045 1 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .04 .24 .5'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Cfilter id='e' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.028' numOctaves='3' seed='5' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .02 0 0 0 0 .02 0 0 0 0 .03 1 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 .1 .3'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E %3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E %3Crect width='100%25' height='100%25' filter='url(%23e)'/%3E %3C/svg%3E");background-size:auto,320px 320px,1000px 1000px;color:#fff}
+
+/* ---------- placeholder photos ---------- */
+.ph{position:relative;overflow:hidden;background:var(--g)}
+.ph::after{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.ph:has(img)::after{display:none}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:100%}
+
+/* ---------- home ---------- */
+.home{position:fixed;inset:0}
+.home .ph{position:absolute;inset:0;transition:opacity .6s ease}
+.home .ph.hide{opacity:0}
+.ph video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.home .cap,.home .arrow{text-shadow:0 1px 8px rgba(0,0,0,.45)}
+.home .arrow{box-shadow:0 1px 10px rgba(0,0,0,.18)}
+.pbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 45%;z-index:1}
+.pbg.pbg-desk{object-position:50% 50%}
+.home .shade{z-index:2}
+.home .index{z-index:6}
+.shade{position:absolute;inset:0;background:rgba(0,0,0,.42);opacity:0;transition:opacity .35s}
+.home.listing .shade{opacity:1}
+.ctrl{position:absolute;left:0;right:0;bottom:calc(74px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:space-between;padding:0 20px;color:#fff;z-index:5}
+.arrow{width:44px;height:30px;border:1px solid rgba(255,255,255,.8);border-radius:15px;display:grid;place-items:center;font-size:15px}
+.cap{font-size:15px;text-decoration:none;text-align:center}
+.cap span{color:rgba(255,255,255,.75)}
+.home.listing .ctrl{opacity:0;pointer-events:none}
+.index{position:absolute;left:20px;right:20px;top:calc(110px + env(safe-area-inset-top,0px));bottom:calc(80px + env(safe-area-inset-bottom,0px));overflow-y:auto;z-index:6;color:#fff;opacity:0;pointer-events:none;transition:opacity .3s}
+.home.listing .index{opacity:1;pointer-events:auto}
+.index ol{list-style:none;margin:0;padding:0}
+.index a{display:inline-block;font-family:var(--helv);font-weight:400;letter-spacing:-.015em;font-size:clamp(30px,8.5vw,56px);line-height:1.12;text-decoration:none;padding:2px 0}
+.index a:hover,.index a:focus-visible{font-style:italic}
+.index small{font-family:var(--sans);font-size:13px;vertical-align:super;margin-left:6px;opacity:.75}
+
+/* ---------- project ---------- */
+.project{padding:calc(120px + env(safe-area-inset-top,0px)) 0 calc(92px + env(safe-area-inset-bottom,0px))}
+.project h1{font-family:var(--helv);font-weight:400;font-size:clamp(44px,12vw,96px);line-height:1;margin:0 20px 8px;letter-spacing:-.02em}
+.project .meta{margin:0 20px 48px;color:var(--muted);font-size:15px}
+.reel{display:flex;flex-direction:column;gap:14px;max-width:1100px;margin:0 auto}
+.reel figure{margin:0}
+.lookbook{width:calc(100% - 40px);max-width:1400px;margin:-24px auto 20px}
+.lookbook iframe{display:block;width:100%;height:600px;border:0;background:transparent}
+.real{gap:14px;padding:0 20px}
+.real figure{overflow:hidden;background:var(--mist)}
+.real img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.real .rw{width:100%}
+.reel .rf,.reel figure.rf{width:calc(100vw - var(--sbw,0px));max-width:none;margin:0 0 0 calc(50% - (100vw - var(--sbw,0px)) / 2);align-self:flex-start}
+.real .rp{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (min-width:800px){.real{gap:22px;padding:0 36px}.real .rp{gap:22px}}
+.film{width:calc(100% - 40px);max-width:1400px;margin:0 auto}
+@media (min-width:800px){.film{width:calc(100% - 72px)}}
+.film + .film{margin-top:56px}
+.film-frame{position:relative;aspect-ratio:16/9;background:#e9e7e2;overflow:hidden}
+.film-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.film-cta{position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;background:rgba(0,0,0,.72);color:#fff;border-radius:5px;font-size:14px;line-height:1.2;text-decoration:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:background .2s ease}
+.film-cta:hover,.film-cta:focus-visible{background:#000}
+.film figcaption{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.5}
+.film figcaption em{color:var(--ink);font-style:italic}
+.film figcaption span{display:block}
+@media (max-width:520px){.film-cta{right:10px;bottom:10px;padding:7px 11px;font-size:13px}}
+/* ---------- portraits ---------- */
+.pt-flow{display:flex;flex-direction:column;gap:56px;margin-top:8px}
+.pt-band{display:contents}
+.pt-flow{overflow-x:clip}   /* the slight zoom before each photo animates in must not cause sideways scrolling */
+.pt-f{position:relative;margin:0;overflow:visible}
+.pt-f img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in;transform:scale(1.07);transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.pt-f{opacity:0;transform:translateY(46px);transition:opacity .9s ease,transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.pt-f.in{opacity:1;transform:none}
+.pt-f.in img{transform:none}
+.pt-f>img{clip-path:inset(0)}
+.pt-f figcaption{position:absolute;top:-22px;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.pt-full{width:100%;}
+.pt-full figcaption{left:20px}
+.pt-in-r{width:78%;align-self:flex-end;margin-right:20px}
+.pt-in-r figcaption{right:0}
+.pt-in-l{width:70%;margin-left:20px}
+.pt-in-l figcaption{left:0}
+.pt-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px;align-items:start}
+.pt-pair .pt-f figcaption{left:0}
+.pt-pair .pt-low{margin-top:22%}
+/* fine-tuning: Pink shirt a bit lower beside Lace, Library a touch lower beside White shirt, Pink tucked closer to Dressing room */
+.pt-pair-1 .pt-low{margin-top:29%}
+.pt-pair-2 .pt-low{margin-top:24.5%}
+.pt-flow .pt-n7{margin-top:-11px}
+.pt-flow .pt-pair-2{margin-top:-11px}   /* 7 to 8 matches the 6 to 7 spacing */
+/* collage: number on the right, and less white space under "10 images" */
+.pt .meta{margin-bottom:18px}
+.pt-flow .pt-n1 figcaption{left:auto;right:20px}
+/* Pink: 80% of its previous size, still sitting to the right */
+.pt-flow .pt-in-r.pt-n7{width:70.2%}
+@media (min-width:800px){
+  /* desktop: a calm centred column. Big photos centred, singles shifted only slightly left/right,
+     pairs side by side in the middle, so the eye mostly travels down, not across */
+  .pt-flow{width:min(1100px, calc(100% - 220px));margin:8px auto 0;gap:48px}
+  .pt-band{display:contents}
+  .pt-flow .pt-f,.pt-flow .pt-pair,.pt-flow .pt-n7,.pt-flow .pt-pair-2{margin:0}
+  .pt-f figcaption{top:-24px;font-size:12px;left:0;right:auto}
+  .pt-flow .pt-full{width:62%;align-self:center}
+  .pt-flow .pt-in-r{width:46%;align-self:flex-start;margin-left:35%}
+  .pt-flow .pt-in-l{width:42%;align-self:flex-start;margin-left:21%}
+  .pt-flow .pt-in-r.pt-n7{width:42%;margin-left:37%}
+  .pt-flow .pt-pair{width:76%;align-self:center;gap:4%}
+  .pt-flow .pt-n1 figcaption{left:auto;right:0}
+  .pt-flow .pt-pair-1 .pt-low{margin-top:70%}
+  .pt-flow .pt-pair-2 .pt-low{margin-top:64%}
+}
+@media (prefers-reduced-motion: reduce){ .pt-f,.pt-f img{transition:none;transform:none;opacity:1} }
+.sec{scroll-margin-top:84px}
+.sec-rule{display:flex;align-items:center;gap:14px;flex-direction:row-reverse;margin:40px 20px 30px;font:400 12px/1 var(--sans);letter-spacing:.06em;color:var(--muted);opacity:.7}
+.sec-rule::after{content:"";flex:1;height:1px;background:currentColor;opacity:.3}
+.project .meta + .sec .sec-rule{margin-top:-24px}
+.sec + .sec .sec-rule{margin-top:35px;margin-bottom:35px}   /* centered between the photos above and below */
+.sec .lookbook{margin-top:0}
+.sec .lookbook.mid{margin:-24px auto -14px;position:relative;z-index:0}
+.sec .reel{position:relative;z-index:1}
+@media (max-width:799px){ .sec .lookbook.mid{width:100%} }
+@media (min-width:800px){ .sec .lookbook.mid{margin:4px auto 14px} }
+.next{display:flex;width:fit-content;align-items:center;gap:7px;margin:32px auto 0;padding:9px 18px;background:#000;color:#fff;border-radius:5px;font-family:var(--sans);font-size:14px;line-height:1.2;text-decoration:none;transition:background .2s ease}
+.next:hover,.next:focus-visible{background:#333}
+.next span{transition:transform .2s ease}
+.next:hover span{transform:translateX(3px)}
+
+/* ---------- on stage ---------- */
+.stage{padding:0 0 150px}
+.stage .hero{position:fixed;inset:0;z-index:0;margin:0;background:#000;overflow:hidden}
+.stage .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);will-change:filter}
+@media (orientation:portrait){.stage .hero video{object-fit:contain}}
+.hero-space{height:100vh;height:100svh;pointer-events:none}
+.stage > :not(.hero){position:relative;z-index:1}
+.tap-hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;color:#fff;font:400 22px/1 var(--helv);letter-spacing:.04em;opacity:0;pointer-events:none;transition:opacity .45s ease}
+.tap-hint.show{opacity:1;transition:opacity .2s ease}
+@media (max-width:899px){ .tap-hint{font-size:17px} }   /* a touch smaller on phones */
+.sound{position:fixed;right:20px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:2;font-size:13px;color:#fff;background:rgba(0,0,0,.55);padding:7px 12px;border-radius:2px;transition:opacity .2s}
+
+.logos{list-style:none;width:calc(100% - 40px);margin:0 auto 64px;padding:0;display:flex;flex-direction:column;align-items:center;gap:56px;max-width:900px}
+.logos li{width:100%;display:flex;justify-content:center}
+.logos li:nth-child(2){margin-top:-18px}
+.logos li:last-child{margin-top:-16px;padding:34px 0;border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);width:min(100%,460px)}
+.logos:has(+ .tri){margin-bottom:34px !important}
+.logos img{width:min(100%,460px);max-height:130px;object-fit:contain}
+.tri{list-style:none;width:calc(100% - 40px);margin:0 auto 36px;padding:0;justify-items:center;display:grid;grid-template-columns:1fr 1fr;gap:32px 28px;max-width:560px;align-items:center}
+.tri li{display:flex;justify-content:center}
+.tri{--gw:min(calc(100vw - 40px),460px)}
+.tri img{height:calc(var(--gw) * .146);width:auto;max-width:100%;object-fit:contain}
+.tri li:last-child img{height:calc(var(--gw) * .181)}
+.tri li:last-child{grid-column:1/-1}
+.stills{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:calc(100% - 40px);max-width:1100px;margin:36px auto 0}
+.stills img{cursor:zoom-in;display:block;width:100%;height:100%;object-fit:cover;max-width:100%}
+.stills .wide{grid-column:1/-1;aspect-ratio:16/9}
+.stills .tall{aspect-ratio:2/3}
+.stills .land{aspect-ratio:3/2}
+.stills .open{grid-column:1/-1;aspect-ratio:1800/883}
+.stills .street{grid-column:1/-1;aspect-ratio:1600/1000}
+@media (min-width:800px){.stills{gap:18px}}
+/* desktop only: logos scale up toward the width of the production photos (phones unchanged) */
+@media (min-width:900px){
+  .logos{--lw:clamp(460px,52vw,720px);max-width:1100px;gap:72px}
+  .logos img{width:min(100%,var(--lw));max-height:calc(var(--lw) * .28)}
+  .logos li:nth-child(2){margin-top:-26px}
+  .logos li:last-child{margin-top:-22px;padding:46px 0;width:min(100%,var(--lw))}
+  .tri{--gw:clamp(460px,52vw,720px);max-width:calc(var(--gw) * 1.22);gap:44px 52px}
+}
+
+/* ---------- about ---------- */
+/* desktop: About opens as a panel over the current page */
+.ap{position:fixed;inset:0;z-index:45}
+.ap[hidden]{display:none}
+.ap-dim{position:absolute;inset:0;background:rgba(0,0,0,.62);opacity:0;transition:opacity .35s ease;cursor:pointer}
+.ap-panel{position:absolute;top:0;bottom:0;left:50%;width:min(880px,52vw);transform:translate(-50%,28px);opacity:0;overflow-y:auto;overscroll-behavior:contain;color:#fff;box-shadow:0 0 60px rgba(0,0,0,.35);transition:opacity .35s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.ap.open .ap-dim{opacity:1}
+.ap.open .ap-panel{opacity:1;transform:translate(-50%,0)}
+.ap-panel .about{padding:72px 56px 96px;max-width:none}
+.ap-close{position:absolute;top:26px;right:36px;display:flex;align-items:center;gap:12px;padding:6px 2px;background:none;border:0;color:#fff;font:inherit;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;opacity:0;transition:opacity .35s ease}
+.ap-close span{font-size:20px;line-height:1;font-weight:300}
+.ap.open .ap-close{opacity:1}
+.ap-close:focus{outline:none}
+.ap-close:focus-visible{outline:1px solid rgba(255,255,255,.55);outline-offset:4px}
+html.ap-lock,html.ap-lock body{overflow:hidden}
+nav{transition:opacity .3s ease}
+html.ap-lock nav{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion: reduce){ .ap-dim,.ap-panel,.ap-close{transition:none} }
+.about{padding:calc(120px + env(safe-area-inset-top,0px)) 20px 150px;max-width:720px;margin:0 auto;text-align:center}
+.about p{max-width:36em;margin:0 auto 18px}
+.portrait{width:min(300px,70%);aspect-ratio:1192/1584;box-shadow:0 12px 30px rgba(0,0,0,.25);margin:0 auto 40px;display:block}
+
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;
+  padding:calc(56px + env(safe-area-inset-top,0px)) 12px calc(56px + env(safe-area-inset-bottom,0px))}
+.lb.open{display:flex}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-out}
+.lb button{position:absolute;color:#fff;font-size:15px;padding:10px 14px}
+.lb .x{top:calc(10px + env(safe-area-inset-top,0px));right:10px}
+.lb .pv,.lb .nx{top:50%;transform:translateY(-50%);font-size:26px;padding:14px}
+.lb .pv{left:4px}.lb .nx{right:4px}
+.lb .ct{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:rgba(255,255,255,.6);font-size:13px}
+@media (hover:none){.lb .pv,.lb .nx{display:none}}
+
+.home.cur-l{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M25 16H7M13 10l-6 6 6 6' fill='none' stroke='%23fff' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, w-resize}
+.home.cur-r{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M7 16h18M19 10l6 6-6 6' fill='none' stroke='%23fff' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, e-resize}
+/* ---------- splash ---------- */
+.splash{position:fixed;inset:0;z-index:50;background:#111 url("media/img/cover-splash.jpg") 10% 0%/cover no-repeat;color:#fff;display:grid;place-items:center;cursor:pointer;overflow:hidden;transition:opacity .7s ease}
+.splash:focus{outline:none}
+.splash-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:10% 0%}
+
+.splash h1{z-index:1}
+@keyframes hint{to{opacity:.9}}
+.splash.gone{opacity:0;pointer-events:none}
+.splash h1{position:relative;width:min(78vw,620px);aspect-ratio:900/628;margin:0}
+/* signature splash: shown in full from the first frame */
+.splash h1 i{position:absolute;inset:0;background:#fff}
+.splash h1 .s1{-webkit-mask:url("media/img/db4e85b0b5f1.png") center/contain no-repeat;mask:url("media/img/db4e85b0b5f1.png") center/contain no-repeat}
+.splash h1 .s2{-webkit-mask:url("media/img/0687e32cef36.png") center/contain no-repeat;mask:url("media/img/0687e32cef36.png") center/contain no-repeat;animation-delay:.5s}
+@keyframes write{to{clip-path:inset(0 0 0 0)}}
+@keyframes in{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  .splash h1 i{animation:none;clip-path:none}
+  .splash,.home .ph,.shade,.index{transition:none}
+}
+@media (min-width:800px){
+  .bar{padding-left:36px;padding-right:36px}
+  .project h1,.project .meta,.sec-rule{margin-left:36px;margin-right:36px}
+  .about{padding-left:36px;padding-right:36px}
+
+  .reel{gap:28px}
+}
+/* small print: Helvetica everywhere; IBM Plex Serif for the About story. Both calibrated to the original small print (values set by the script below) */
+body{font-size-adjust:var(--hv-adjust,none);letter-spacing:var(--hv-track,normal)}
+.logo,.index a,.project h1{font-size-adjust:none}
+.about p{font-family:var(--plex);font-size-adjust:var(--px-adjust,none);letter-spacing:var(--px-track,normal)}
+/* Live Performance: no white space; every row, including the pair, flush with the screen edges */
+#sec-theatrical .reel{gap:0}
+#sec-theatrical .reel .rp{gap:0;width:calc(100vw - var(--sbw,0px));max-width:none;margin:0 0 0 calc(50% - (100vw - var(--sbw,0px)) / 2)}
+/* section labels: a touch bigger and stronger on desktop so they hold their own between full-width photos */
+@media (min-width:800px){
+  .sec-rule{font-size:15px;opacity:.85;gap:18px}
+  .sec-rule::after{opacity:.45}
+}
+/* ---------- desktop splash: the video three times across, in unison, in Super 8 film frames ---------- */
+.s8row{display:none}
+@media (min-width:900px){
+  .splash{background:#050505 !important}
+  .splash .splash-vid{inset:auto;left:-40px;top:-40px;width:8px;height:8px;opacity:0;pointer-events:none}
+  .s8row{display:flex;position:absolute;inset:0;z-index:0}
+  .s8{--pt:max(26px,3.2vh);--pb:max(30px,3.8vh);--px:max(7px,.5vw);
+      position:relative;flex:1 1 0;height:100%;padding:var(--pt) var(--px) var(--pb);background:#0e0d0b;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+  .s8 canvas{display:block;width:100%;height:100%;border-radius:10px;background:#0e0d0b}
+  .s8 svg{position:absolute;left:calc(var(--px) + 6%);width:calc(100% - 2 * var(--px) - 12%);overflow:visible}
+  .s8 .edge{top:calc(var(--pt) * .3);height:calc(var(--pt) * .38)}
+  .s8 .foot{bottom:calc(var(--pb) * .26);height:calc(var(--pb) * .44)}
+  .s8 .edge rect,.s8 .foot path,.s8 .foot rect{fill:#d8be86}
+}
+html.nosplash .splash{display:none !important}
+html.booting,html.booting body{background:#000}
+/* desktop: Theatre photos keep touching but sit in the same centred column as the Events page (phones stay edge to edge) */
+@media (min-width:800px){
+  .sec .reel .rf,.sec .reel figure.rf{width:100%;margin:0}
+  #sec-theatrical .reel .rp{width:100%;margin:0}
+}
+/* galleries marked gapless (Events): photos touch; phones edge to edge, desktop stays in the centred column */
+.reel.gapless,.reel.gapless .rp{gap:0}
+/* rows come in pairs: two touching rows, a slight gap, two more, and so on */
+.reel.gapless > :nth-child(2n+3){margin-top:22px}
+@media (min-width:800px){ .reel.gapless > :nth-child(2n+3){margin-top:42px} }
+@media (max-width:799px){
+  .reel.gapless{width:calc(100vw - var(--sbw,0px));max-width:none;margin-left:calc(50% - (100vw - var(--sbw,0px)) / 2);margin-right:0;padding-left:0;padding-right:0}
+}
+</style>
+</head>
+<body data-route="home">
+
+<div class="splash" id="splash" role="button" tabindex="0" aria-label="Enter Luke Rands">
+  <video class="splash-vid" id="splashVid" muted playsinline autoplay preload="auto" aria-hidden="true" poster="media/img/cover-splash.jpg"></video>
+  <div class="s8row" id="s8row" aria-hidden="true"></div>
+  <h1 id="splashName"><span class="vh">Luke Rands</span></h1>
+</div>
+<script>
+(async function calibrateSmallPrint(){
+  try{
+    const ref='"Familjen Grotesk"', hv='"Helvetica Neue", Helvetica, Arial, sans-serif', px='"IBM Plex Serif", Georgia, serif';
+    await Promise.all([document.fonts.load('100px '+ref), document.fonts.load('100px "IBM Plex Serif"')]);
+    if(!document.fonts.check('100px '+ref)) return;
+    const c=document.createElement("canvas").getContext("2d");
+    const T="On Stage Photography About Instagram Contact me Next gallery 28 images";
+    const m=f=>{ c.font=f; return { xh:c.measureText("x").actualBoundingBoxAscent, w:c.measureText(T).width }; };
+    const a=m("400 100px "+ref);
+    const canAdjust = window.CSS && CSS.supports("font-size-adjust","0.5");
+    const r=document.documentElement.style;
+    const fit=(fam,key)=>{                                   // same lowercase height + same overall word length
+      const b=m("400 100px "+fam), scale = canAdjust ? a.xh/b.xh : 1;
+      if(canAdjust) r.setProperty("--"+key+"-adjust", (a.xh/100).toFixed(4));
+      r.setProperty("--"+key+"-track", ((a.w - b.w*scale)/T.length/100).toFixed(4)+"em");
+    };
+    fit(hv,"hv");
+    if(document.fonts.check('100px "IBM Plex Serif"')) fit(px,"px");
+  }catch(e){}
+})();
+</script>
+
+<header class="bar top">
+  <a class="logo" href="#/" aria-label="Luke Rands, home"><span class="vh">Luke Rands</span></a>
+  <nav>
+    <a href="#/on-stage" id="navStage">On Stage</a>
+    <a href="#/photography" id="navPhoto">Photography</a>
+    <a href="#/about" id="navAbout">About</a>
+  </nav>
+</header>
+
+<main id="view"></main>
+
+<div class="ap" id="ap" role="dialog" aria-modal="true" aria-label="About Luke Rands" hidden>
+  <div class="ap-dim" id="apDim"></div>
+  <div class="ap-panel" id="apPanel"></div>
+  <button class="ap-close" id="apClose">Close <span aria-hidden="true">&#10005;</span></button>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <img id="lbImg" alt="">
+  <button class="x" id="lbX" aria-label="Close">Close</button>
+  <button class="pv" id="lbPv" aria-label="Previous photo">&#8592;</button>
+  <button class="nx" id="lbNx" aria-label="Next photo">&#8594;</button>
+  <div class="ct" id="lbCt"></div>
+</div>
+
+<footer class="bar bottom">
+  <a class="ig" href="https://www.instagram.com/lukerands/" target="_blank" rel="noopener">Instagram</a>
+  <a class="say" href="mailto:ljrands@gmail.com"><svg class="bub" viewBox="0 0 120 52" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M21 1H99A20 20 0 0 1 119 21A20 20 0 0 1 106.5 39.5L106 51L90 41H21A20 20 0 0 1 1 21A20 20 0 0 1 21 1Z"/></svg><span>Contact me</span></a>
+</footer>
+
+<script>
+/* ============================================================
+   EDIT YOUR CONTENT HERE
+   - title: project name
+   - photos: list of image sources (data: URIs or uploaded assets).
+     Leave empty to show placeholder frames.
+   - count: how many placeholder frames to show while photos is empty
+   ============================================================ */
+const PROJECTS = [
+  { slug:"theatrical",   title:"Theatre",    count:4, hue:300, rows:[["F",1],["P",0,3],["F",2]], photos:[
+    {src:"media/img/66f0655fff87.webp",w:800,h:1200,alt:"Dancer in a cap kneeling and drinking from a water bottle under teal light"},
+    {src:"media/img/c78949a34dc5.webp",w:1400,h:933,alt:"Dancer reaching toward a glowing curtain on a dark stage"},
+    {src:"media/img/d619d0462e70.webp",w:1400,h:933,alt:"Dancer in white crouching low with a fan prop"},
+    {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"}
+  ] },
+  { slug:"moulin-rouge", within:"theatrical", title:"Moulin Rouge!", count:2, hue:350, lookbook:true, rows:[["F",0],["F",1]], bookAfter:1, photos:[
+    {src:"media/img/2be709789a0c.webp",w:2178,h:1444,alt:"Two performers kissing beside a bentwood chair in stage haze, seen from the wings"},
+    {src:"media/img/3e5963f1f548.webp",w:2560,h:1706,alt:"Performer in a robe reading at a red-draped dressing table between two bulb-lit mirrors"}
+  ] },
+  { slug:"portraits",    title:"Portraits",     count:10, hue:205, portraits:true, layout:["full","in-r","pair","pair","full","in-l","in-r","pair","pair","full"], bands:[2,3,2,3], photos:[
+    {src:"media/img/825303fab6e2.webp",w:1920,h:2560,alt:"Collage of a dancer in a black tank top caught in dozens of silhouetted, mid-movement poses",hero:true},
+    {src:"media/img/3980032841be.webp",w:1706,h:2560,alt:"Woman in pinstripe jeans lying on her side with one leg raised against a white backdrop"},
+    {src:"media/img/effbdef0c733.webp",w:1536,h:2304,alt:"Woman in a white lace shirt tied at the waist, hand on hip, against a black backdrop"},
+    {src:"media/img/c736a24281a7.webp",w:1920,h:2560,alt:"Man with a dark mustache in an open pink satin shirt against a burnt-orange wall"},
+    {src:"media/img/49426b83b8e7.webp",w:1706,h:2560,alt:"Man in a striped shirt sprawled among books and notebooks, typing and writing at once"},
+    {src:"media/img/2f5600cfd2ba.webp",w:768,h:1024,alt:"Performer in a black tank top leaning on a dressing-room counter, fist resting at his temple"},
+    {src:"media/img/63e71a9e5499.webp",w:1707,h:2560,alt:"Woman in a pink dress with one hand in her hair against a lilac backdrop"},
+    {src:"media/img/a01598ce787a.webp",w:1707,h:2560,alt:"Dancer in a white shirt reaching overhead with eyes closed in soft gray light"},
+    {src:"media/img/a1299e71542f.webp",w:1536,h:2048,alt:"Dancer in a deep lunge with one arm reaching skyward between library bookshelves, tall windows behind him"},
+    {src:"media/img/1c954e7d9000.webp",w:1697,h:2560,alt:"Woman lying on a white studio floor, feet up and chin resting on her hands"}
+  ] },
+  { slug:"events",       title:"Events",        count:13, hue:28, gapless:true, rows:[["W",5],["P",4,2],["P",8,9],["P",12,11,10],["W",0],["P",1,3]], photos:[
+    {src:"media/img/df7c9f589bc1.webp",w:2048,h:1365,alt:"Four guests in black and white formalwear posing together"},
+    {src:"media/img/892aa70fc098.webp",w:1365,h:2048,alt:"Black and white silhouette of a woman applying makeup by a mirror"},
+    {src:"media/img/d09e33e4874d.webp",w:1365,h:2048,alt:"Profile portrait of a woman with braids and a sculptural silver earring"},
+    {src:"media/img/867fe72cad83.webp",w:1920,h:2560,alt:"A guest in a black halter embracing a laughing woman in black lace and white satin"},
+    {src:"media/img/49bf780c5e1c.webp",w:1365,h:2048,alt:"Woman in a white satin dress raising a lace-gloved arm against a red wall"},
+    {src:"media/img/66576ae8b53b.webp",w:1741,h:1161,alt:"Three guests in black and white posing close in front of a curtain"},
+    {src:"media/img/c6ba17e20d11.webp",w:1152,h:2048,alt:"Woman in a white satin dress leaning on a brass railing against a red wall",hidden:true},
+    {src:"media/img/71b59d41dc66.webp",w:600,h:900,alt:"Woman in a white satin dress looking back over her shoulder by a red wall",hidden:true},
+    {src:"media/img/dfbebbf59c47.webp",w:1706,h:2560,alt:"Guest in sunglasses and a gray jacket on the Moulin Rouge! red carpet"},
+    {src:"media/img/d788d72ae120.webp",w:724,h:1086,alt:"Woman in a plunging burgundy gown under warm marquee lights"},
+    {src:"media/img/f8cae21199f0.webp",w:724,h:1086,alt:"Woman in a beaded olive gown on the Hollywood Walk of Fame"},
+    {src:"media/img/71f96456d0fe.webp",w:724,h:1086,alt:"Man in a sleeveless black jacket and corset belt, posing at dusk"},
+    {src:"media/img/521aae8561e5.webp",w:724,h:1086,alt:"Guest in a white shirt and patterned bow tie smiling at the Moulin Rouge! backdrop"}
+  ] },
+  { slug:"video",        title:"Video",       count:2,  hue:45,  film:true, photos:[] }
+];
+
+const $ = s => document.querySelector(s);
+const view = $("#view");
+
+function grad(hue, i){
+  const a = (hue + i*23) % 360, b = (hue + 180 + i*41) % 360;
+  const ang = 120 + (i*37)%120;
+  return `linear-gradient(${ang}deg, hsl(${a} 45% 38%), hsl(${(a+30)%360} 35% 62%) 55%, hsl(${b} 30% 22%))`;
+}
+function frame(p, i, cls=""){
+  const ph = p.photos[i], src = ph && (typeof ph==="string" ? ph : ph.src);
+  const label = src ? "" : `<span class="tag">${p.title}, photo ${i+1}</span>`;
+  const img = src ? `<img src="${src}" alt="${p.title}, photo ${i+1}" loading="lazy">` : "";
+  return `<div class="ph ${cls}" style="--g:${grad(p.hue,i)}">${img}${label}</div>`;
+}
+const total = p => p.photos.filter(x=>!x.hidden).length || p.count;   // hidden photos (kept only for the landing slideshow) are not counted
+/* galleries folded into another page show up as sections of it */
+const GROUPS = { theatrical:[
+  {slug:"theatrical",   label:"Live Performance"},
+  {slug:"moulin-rouge", label:"Moulin Rouge!"}
+] };
+const P = slug => PROJECTS.find(q=>q.slug===slug);
+const LISTED = PROJECTS.filter(q=>!q.within);
+const groupOf = q => q.within ? P(q.within) : q;
+const groupTotal = q => GROUPS[q.slug] ? GROUPS[q.slug].reduce((n,s)=>n+total(P(s.slug)),0) : total(q);
+
+/* ---------- home ---------- */
+let cur = 0, timer = null;
+/* front-page slideshow, built from the galleries:
+   desktop = landscape photos + both films;  phones = vertical photos + both films (cropped to keep the dancers in frame) */
+const HOME_DESK = matchMedia("(min-width: 900px)");
+const FILM_FRAMING = ["25.7% 50%", "43% 50%"];   // phone crop for Wall (the two dancers), Shift (the lead dancer)
+/* front-page-only photos (not in any gallery) */
+const HOME_EXTRA = [
+  {src:"media/img/b02a20929811.webp",w:1600,h:1060,alt:"Dancers mid can-can, skirts swirling, facing an empty auditorium, shot on film"},
+  {src:"media/img/019d6e75b5e6.jpg",w:725,h:1082,alt:"Performer in a red feathered headpiece leaning on a gilded balcony rail, shot on film"}
+];
+/* gallery photos kept off the front page (they stay in their galleries) */
+const HOME_EXCLUDE = new Set(["Dancer in a cap kneeling and drinking from a water bottle under teal light", "Performer in a peach corset and wide brimmed hat backstage", "Performer in a tall red feather headdress looking back over her shoulder", "Collage of a dancer in a black tank top caught in dozens of silhouetted, mid-movement poses", "Woman in pinstripe jeans lying on her side with one leg raised against a white backdrop", "Performer in a black tank top leaning on a dressing-room counter, fist resting at his temple", "Dancer in a deep lunge with one arm reaching skyward between library bookshelves, tall windows behind him", "Profile portrait of a woman with braids and a sculptural silver earring", "Black and white silhouette of a woman applying makeup by a mirror", "Woman in a white satin dress looking back over her shoulder by a red wall", "Woman in a white satin dress raising a lace-gloved arm against a red wall", "Performer in a jeweled top hat under deep blue light", "Woman in a white satin dress and lace gloves biting a gloved finger", "Man with a dark mustache in an open pink satin shirt against a burnt-orange wall", "Performer in a robe reading at a red-draped dressing table between two bulb-lit mirrors", "Guest in sunglasses and a gray jacket on the Moulin Rouge! red carpet", "Woman in a plunging burgundy gown under warm marquee lights", "Woman in a beaded olive gown on the Hollywood Walk of Fame", "Man in a sleeveless black jacket and corset belt, posing at dusk", "Guest in a white shirt and patterned bow tie smiling at the Moulin Rouge! backdrop", "A guest in a black halter embracing a laughing woman in black lace and white satin"]);
+function homeSlides(){
+  const desk = HOME_DESK.matches, want = ph => !HOME_EXCLUDE.has(ph.alt) && (desk ? ph.w > ph.h : ph.h > ph.w);
+  const from = slug => { const p=P(slug); return p ? p.photos.map((ph,i)=>({p,i,ph})).filter(x=>want(x.ph)) : []; };
+  const EXTRA_P = {slug:"theatrical", within:"theatrical", title:"Theatre", photos:HOME_EXTRA};
+  const extra = HOME_EXTRA.map((ph,i)=>({p:EXTRA_P, i, ph})).filter(x=>want(x.ph));   // front-page-only photos
+  const pools = desk ? [from("moulin-rouge"), from("theatrical")]          // desktop: no Events photos
+                     : [[...extra, ...from("moulin-rouge")], from("portraits"), from("theatrical"), from("events")];
+  const stills=[]; let more=true;                    // take turns between galleries for variety
+  for(let r=0; more; r++){ more=false; pools.forEach(pl=>{ if(pl[r]){ stills.push(pl[r]); more=true; } }); }
+  const vp=P("video"), films=FILMS.map((f,k)=>({p:vp, film:k, pos: desk ? "50% 50%" : FILM_FRAMING[k]}));
+  if(desk){                                           // desktop: Wall leads, can-can closes
+    const th=from("theatrical"), mr=from("moulin-rouge");
+    return [films[0], th[0], films[1], ...th.slice(1), ...mr, ...extra].filter(Boolean);
+  }
+  const out=stills.slice();
+  if(films[0]) out.splice(1,0,films[0]);              // a film early on...
+  if(films[1]) out.splice(Math.round(out.length/2),0,films[1]);   // ...and one later
+  return out;
+}
+let HOME_SLIDES = [];   // filled in when the front page renders
+HOME_DESK.addEventListener("change", ()=>{ HOME_SLIDES = homeSlides(); cur = 0; if(rendered==="" || rendered==="photography") renderRoute(rendered); });
+const PHOTO_BG_DESK = "media/img/photography-desktop.webp";   // desktop: wide studio shot (phones keep PHOTO_BG)
+const PHOTO_BG = "media/img/d15fa3baacc1.webp";
+function renderHome(listing){
+  HOME_SLIDES = homeSlides(); if(cur>=HOME_SLIDES.length) cur=0;
+  view.innerHTML = `
+    <section class="home ${listing?"listing":""}" id="home">
+      ${HOME_SLIDES.map((sl,i)=> sl.film!=null
+          ? `<div data-i="${i}" class="ph vid ${i===cur?"":"hide"}"><video muted loop playsinline preload="none" poster="${FILMS[sl.film].poster}" aria-label="${FILMS[sl.film].title}, silent excerpt" style="object-position:${sl.pos}"></video></div>`
+          : frame(sl.p,sl.i,i===cur?"":"hide").replace('class="ph','data-i="'+i+'" class="ph')).join("")}
+      ${listing?(HOME_DESK.matches
+          ? `<picture><source type="image/webp" srcset="${PHOTO_BG_DESK}"><img class="pbg pbg-desk" src="${PHOTO_BG}" alt="Luke photographing a model on a white studio floor"></picture>`
+          : `<img class="pbg" src="${PHOTO_BG}" alt="Luke photographing a model on a white studio floor">`):""}
+      <div class="shade"></div>
+      <div class="ctrl">
+        <button class="arrow" id="prev" aria-label="Previous project">&#8592;</button>
+        <a class="cap" id="cap"></a>
+        <button class="arrow" id="next" aria-label="Next project">&#8594;</button>
+      </div>
+      <div class="index" id="index">
+        <ol>${LISTED.map(p=>`<li><a href="#/p/${p.slug}" data-slug="${p.slug}">${p.title}<small>${groupTotal(p)}</small></a></li>`).join("")}</ol>
+      </div>
+    </section>`;
+  view.querySelectorAll(".home > .ph.vid video").forEach(v=>{ v.muted=true; v.defaultMuted=true; v.src=filmURL(FILMS[HOME_SLIDES[+v.parentNode.dataset.i].film].data); });
+  show(cur);
+  $("#prev").onclick = ()=>{show(cur-1); restart();};
+  $("#next").onclick = ()=>{show(cur+1); restart();};
+  view.querySelectorAll(".index a").forEach(a=>{
+    const go = ()=>{ if(listing) return; const k=HOME_SLIDES.findIndex(sl=>groupOf(sl.p).slug===a.dataset.slug); if(k>=0) show(k); };
+    a.addEventListener("mouseenter",go); a.addEventListener("focus",go);
+  });
+  let x0=null; const h=$("#home");
+  h.addEventListener("touchstart",e=>x0=e.touches[0].clientX,{passive:true});
+  h.addEventListener("touchend",e=>{ if(x0===null||h.classList.contains("listing"))return;
+    const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){show(cur+(dx<0?1:-1));restart();} x0=null;});
+  // tap/click anywhere on the photo: left half goes back, right half goes forward
+  h.addEventListener("click",e=>{
+    if(h.classList.contains("listing") || e.target.closest("a,button,.ctrl,.index")) return;
+    show(cur+(e.clientX < innerWidth/2 ? -1 : 1)); restart();
+  });
+  h.addEventListener("mousemove",e=>{
+    const side = h.classList.contains("listing") || e.target.closest("a,button") ? "" : (e.clientX < innerWidth/2 ? "l" : "r");
+    h.classList.toggle("cur-l", side==="l"); h.classList.toggle("cur-r", side==="r");
+  });
+  let wheelLock=0;
+  h.addEventListener("wheel",e=>{ if(h.classList.contains("listing")) return;
+    const d=Math.abs(e.deltaY)>Math.abs(e.deltaX)?e.deltaY:e.deltaX;
+    if(Math.abs(d)<12 || Date.now()<wheelLock) return;
+    wheelLock=Date.now()+700; show(cur+(d>0?1:-1)); restart();},{passive:true});
+  restart();
+}
+function show(i){
+  cur = (i + HOME_SLIDES.length) % HOME_SLIDES.length;
+  view.querySelectorAll(".home > .ph").forEach(el=>{
+    const on = +el.dataset.i===cur; el.classList.toggle("hide", !on);
+    const v=el.querySelector("video"); if(v){ if(on){ try{ v.currentTime=0; }catch(e){} const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{}); } else v.pause(); }
+  });
+  const sl = HOME_SLIDES[cur], sp = sl.p, p = groupOf(sp), cap = $("#cap");
+  if(cap){ cap.href = routeToPath("p/"+sp.slug); cap.dataset.route = "p/"+sp.slug; cap.innerHTML = sl.film!=null ? `${p.title} <span>(${FILMS.length} films)</span>` : `${p.title} <span>(${groupTotal(p)} images)</span>`; }
+}
+function restart(){
+  if(curRoute()==="photography"){ clearInterval(timer); return; }
+  clearInterval(timer);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const dur = 4500;   // films and photos stay up the same length of time
+  timer = setTimeout(()=>{ if(!$("#home")?.classList.contains("listing")){ show(cur+1); restart(); } }, dur);
+}
+
+/* ---------- project ---------- */
+function fitLookbook(){
+  const f=document.getElementById("lbk"); if(!f) return;
+  const w=f.clientWidth, maxH=Math.round(innerHeight*0.8)+82;
+  const bookW = w<800 ? w-55 : Math.min(w*0.96, 1400), h=Math.round(bookW/1.545)+160;
+  f.style.height=Math.min(h,maxH)+"px";
+}
+addEventListener("resize",fitLookbook);
+function realInner(p){
+  const ph=p.photos, img=i=>`<img src="${ph[i].src}" alt="${ph[i].alt}" data-i="${i}" loading="lazy">`;
+  const html=p.rows.map(r=>{
+    const [k,a]=r, ar=i=>`aspect-ratio:${ph[i].w}/${ph[i].h}`;
+    if(k==="P"){ const ids=r.slice(1);   // two or three photos side by side, all the same height
+      return `<div class="rp" style="grid-template-columns:${ids.map(i=>(ph[i].w/ph[i].h).toFixed(4)+"fr").join(" ")}">`+
+        ids.map(i=>`<figure style="${ar(i)}">${img(i)}</figure>`).join("")+`</div>`; }
+    if(k==="F") return `<figure class="rf" style="${ar(a)}">${img(a)}</figure>`;   // full-bleed, edge to edge
+    return `<figure class="rw" style="${ar(a)}">${img(a)}</figure>`;   // wide, within the page margins
+  });
+  if(p.lookbook && p.bookAfter!=null)   // the book sits between rows of photos
+    html.splice(p.bookAfter,0,`</div><div class="lookbook mid"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div><div class="reel real">`);
+  return html.join("");
+}
+function bindReal(root, ph){
+  // the viewer steps through photos in the order they appear on screen
+  const imgs=[...root.querySelectorAll(".real img")], seq=imgs.map(im=>ph[+im.dataset.i]);
+  imgs.forEach((im,k)=>{
+    im.tabIndex=0; im.setAttribute("role","button");
+    im.onclick=()=>openLB(k,seq);
+    im.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openLB(k,seq);} };
+  });
+}
+function renderReal(p, nxt){
+  const ph=p.photos, html=realInner(p);
+  view.innerHTML = `
+    <article class="project">
+      <h1>${p.title}</h1>
+      <p class="meta">${ph.filter(x=>!x.hidden).length} images</p>
+      ${p.lookbook?`<div class="lookbook"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div>`:""}
+      <div class="reel real${p.gapless?" gapless":""}">${html}</div>
+      <a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a>
+    </article>`;
+  bindReal(view, ph); setSbw();
+  scrollTo(0,0);
+}
+function setSbw(){ document.documentElement.style.setProperty("--sbw", (innerWidth - document.documentElement.clientWidth)+"px"); }
+addEventListener("resize", setSbw);
+function renderGroup(g, focus){
+  const parts = GROUPS[g.slug].map(s=>({...s, p:P(s.slug)})).filter(s=>s.p);
+  const nxt = LISTED[(LISTED.indexOf(g)+1)%LISTED.length];
+  const body = parts.map(s=>{
+    const q=s.p; let inner;
+    inner=`<div class="reel real">${realInner(q)}</div>`;
+    return `<section class="sec" id="sec-${s.slug}">
+        <h2 class="sec-rule"><span>${s.label}</span></h2>
+        ${q.lookbook && q.bookAfter==null?`<div class="lookbook"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div>`:""}
+        ${inner}
+      </section>`;
+  }).join("");
+  view.innerHTML = `
+    <article class="project">
+      <h1>${g.title}</h1>
+      <p class="meta">${groupTotal(g)} images</p>
+      ${body}
+      <a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a>
+    </article>`;
+  parts.forEach(s=>bindReal($("#sec-"+s.slug), s.p.photos));
+  setSbw();
+  scrollTo(0,0);
+  if(focus && focus!==g.slug && focus!==parts[0].slug){ const el=$("#sec-"+focus); if(el) requestAnimationFrame(()=>el.scrollIntoView()); }
+}
+const FILMS = [
+  { data:"filmData", poster:"media/img/cover-wall.jpg",
+    title:"Wall", by:"Fabulosa! presents",
+    credits:"Mio Ishikawa, Steve Bangerter, Rebecca McCartney & Luke Rands",
+    link:"https://www.instagram.com/reel/DcQ79PrJyHG/" },
+  { data:"filmData2", poster:"media/img/cover-shift.jpg",
+    title:"Shift", by:"A film by Ndaya Dream &amp; Luke Rands",
+    credits:"Dasia Alonna Amos, Ronnie S. Bowman Jr., Harmon, Skye Jackson-Williams & Chelsea Mitchell-Bonsu",
+    link:"https://www.instagram.com/reel/Da3KmjnOR1u/" }
+];
+const _films={};
+function filmURL(id){ return {filmData:"media/video/wall.mp4", filmData2:"media/video/shift.mp4"}[id]; }
+function renderFilm(p, nxt){
+  view.innerHTML = `
+    <article class="project">
+      <h1>${p.title}</h1>
+      <p class="meta">${FILMS.length} films</p>
+      ${FILMS.map((f,k)=>`
+      <figure class="film">
+        <div class="film-frame">
+          <video data-k="${k}" muted loop playsinline autoplay preload="auto" poster="${f.poster}" aria-label="Silent excerpt from ${f.title}"></video>
+          <a class="film-cta" href="${f.link}" target="_blank" rel="noopener">Watch the full film on Instagram <span aria-hidden="true">&#8599;</span></a>
+        </div>
+        <figcaption><em>${f.title}</em> &middot; ${f.by}<span>with ${f.credits}</span></figcaption>
+      </figure>`).join("")}
+      <a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a>
+    </article>`;
+  view.querySelectorAll(".film video").forEach(v=>{
+    v.muted=true; v.defaultMuted=true; v.src=filmURL(FILMS[+v.dataset.k].data);
+    const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{});
+  });
+  scrollTo(0,0);
+}
+/* Portraits: fixed order and magazine rhythm (from the gallery data); photos rise into place as you scroll */
+function renderPortraits(p, nxt){
+  const ph=p.photos, PT_SLOTS=p.layout||[];
+  const fig=(x,i,cls)=>`<figure class="pt-f ${cls}" style="aspect-ratio:${x.w}/${x.h}"><img src="${x.src}" alt="${x.alt}" data-i="${i}" ${i>1?'loading="lazy"':''}><figcaption>${String(i+1).padStart(2,"0")}</figcaption></figure>`;
+  const units=[]; let i=0, pairN=0;
+  while(i<ph.length){
+    const slot=PT_SLOTS[i]||"full";
+    if(slot==="pair" && i+1<ph.length){ pairN++; units.push({n:2,html:`<div class="pt-pair pt-pair-${pairN}">${fig(ph[i],i,"pt-n"+(i+1))}${fig(ph[i+1],i+1,"pt-low pt-n"+(i+2))}</div>`}); i+=2; }
+    else { units.push({n:1,html:fig(ph[i],i,"pt-"+(slot==="pair"?"full":slot)+" pt-n"+(i+1))}); i++; }
+  }
+  // rows for the desktop spread (on phones they are invisible and everything flows in one column)
+  let html="", band=[], cnt=0, bi=0; const B=p.bands||[ph.length];
+  units.forEach(u=>{ band.push(u.html); cnt+=u.n; if(cnt>=B[bi] || u===units[units.length-1]){ bi++; html+=`<div class="pt-band pt-band-${bi}">${band.join("")}</div>`; band=[]; cnt=0; } });
+  view.innerHTML = `
+    <article class="project pt">
+      <h1>${p.title}</h1>
+      <p class="meta">${ph.filter(x=>!x.hidden).length} images</p>
+      <div class="pt-flow">${html}</div>
+      <a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a>
+    </article>`;
+  view.querySelectorAll(".pt img").forEach(im=>{
+    const k=+im.dataset.i; im.tabIndex=0; im.setAttribute("role","button");
+    im.onclick=()=>openLB(k,ph);
+    im.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openLB(k,ph);} };
+  });
+  const figs=view.querySelectorAll(".pt-f");
+  if(!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches){ figs.forEach(f=>f.classList.add("in")); }
+  else{
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }),{rootMargin:"0px 0px -8% 0px",threshold:.08});
+    figs.forEach(f=>io.observe(f));
+  }
+  scrollTo(0,0);
+}
+function renderProject(slug){
+  if(slug==="on-film") slug="video";
+  if(slug==="backstage") slug="theatrical";
+  const idx = PROJECTS.findIndex(p=>p.slug===slug);
+  if(idx<0){ go(""); return; }
+  const g = groupOf(PROJECTS[idx]);
+  if(GROUPS[g.slug]){ renderGroup(g, slug); return; }
+  const p = PROJECTS[idx], n = total(p), nxt = LISTED[(LISTED.indexOf(p)+1)%LISTED.length];
+  if(p.film){ renderFilm(p, nxt); return; }
+  if(p.portraits && p.photos.length){ renderPortraits(p, nxt); return; }
+  if(!p.photos.length){ go("photography"); return; }
+  if(!p.rows) p.rows = p.photos.map((_,i)=>["W",i]);   // a gallery without a layout just shows its photos one per row
+  renderReal(p, nxt);
+}
+
+/* ---------- on stage ---------- */
+const LOGOS = {
+  shows: [
+    {alt:"Mrs. Doubtfire", src:"media/img/86f6a5bd4240.png"},
+    {alt:"Moulin Rouge! The Musical", src:"media/img/60dd7118a7ca.png"},
+    {alt:"Anastasia", src:"media/img/7aff9026dcbb.png"}
+  ],
+  screen: [
+    {alt:"The Gilded Age, HBO Original", src:"media/img/b97842efe11d.png"}
+  ],
+  theatres: [
+    {alt:"Music Theatre Wichita", src:"media/img/613418d953fc.png"},
+    {alt:"Bill Hanney's North Shore Music Theatre", src:"media/img/6e8ca230b5ae.png"},
+    {alt:"The REV Theatre Co.", src:"media/img/63d1cce0af89.png"}
+  ]
+};
+const REEL_POSTER = "media/img/cover-onstage-reel.jpg";
+let _reel=null;
+function reelURL(){ return "media/video/onstage-reel.mp4"; }
+const STILLS = [
+  {c:"open",alt:"Full company dancing in front of an onstage band",src:"media/img/040dfef0295a.webp"},
+  {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",src:"media/img/490b3fb9fa70.webp"},
+  {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",src:"media/img/2fe8c841dbab.webp"},
+  {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",src:"media/img/71f095b95294.jpg"},
+  {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",src:"media/img/e02c559f1cbf.jpg"},
+  {c:"tall",alt:"Luke in costume onstage in front of a snowy cityscape backdrop",src:"media/img/e2937aa09941.jpg"},
+  {c:"land",alt:"Luke in a vest and tie dancing beside a woman in red",src:"media/img/c6b0f5187890.webp"},
+  {c:"land",alt:"Three men in hockey jerseys lounging in a living room set",src:"media/img/57eda5c999e4.webp"},
+  {c:"street",alt:"Six dancers in newsboy costumes leaping down a cobblestone street, Luke in color among them",src:"media/img/cc611f37e80a.jpg"},
+  {c:"tall",alt:"Headshot of Luke Rands in a white tank top",src:"media/img/e1365b9ae29f.webp"},
+  {c:"tall",alt:"Black and white studio portrait of Luke dancing",src:"media/img/a0fd14e43376.webp"}
+];
+function renderStage(){
+  view.innerHTML = `
+    <article class="stage">
+      <div class="hero"><video id="reel" poster="${REEL_POSTER}" autoplay muted loop playsinline preload="auto" aria-label="Luke Rands dance reel"></video><button class="sound" id="sound" aria-pressed="false">Sound on</button><span class="tap-hint" id="tapHint" aria-hidden="true">Scroll</span></div><div class="hero-space"></div>
+      <ul class="logos">${[LOGOS.shows[1],LOGOS.shows[2],LOGOS.shows[0],LOGOS.screen[0]].map(l=>`<li><img src="${l.src}" alt="${l.alt}"></li>`).join("")}</ul>
+      <ul class="tri">${[LOGOS.theatres[0],LOGOS.theatres[2],LOGOS.theatres[1]].map(l=>`<li><img src="${l.src}" alt="${l.alt}"></li>`).join("")}</ul>
+      <div class="stills">${STILLS.map(x=>`<figure class="${x.c}" style="margin:0"><img src="${x.src}" alt="${x.alt}" loading="lazy"></figure>`).join("")}</div>
+    </article>`;
+  view.querySelectorAll(".stills img").forEach((im,i)=>{
+    im.tabIndex=0; im.setAttribute("role","button");
+    im.onclick=()=>openLB(i);
+    im.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openLB(i);} };
+  });
+  const v=$("#reel"), b=$("#sound");
+  v.src = reelURL();
+  v.play().catch(()=>{});
+  heroFx();
+  b.onclick=e=>{ e.stopPropagation(); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); b.textContent=v.muted?"Sound on":"Sound off"; b.setAttribute("aria-pressed",String(!v.muted)); };
+  // tapping the video shows a brief "Scroll" in the middle of the screen
+  const hint=$("#tapHint"); let hintT=0;
+  v.onclick=()=>{ hint.classList.add("show"); clearTimeout(hintT); hintT=setTimeout(()=>hint.classList.remove("show"), 2000); };
+  scrollTo(0,0);
+}
+
+/* ---------- about ---------- */
+function aboutHTML(){
+  return `
+    <article class="about">
+      <div class="ph portrait"><img src="media/img/6ac10dd9b574.webp" alt="Portrait of Luke Rands"></div>
+      <p>I discovered dance in the suburbs of Chicago after a long bout with every sport under the sun. I knew every word to the <em>Wicked</em> soundtrack, and triumphantly gave my parents the silent treatment when they went to see the show without me. A few years later, when I was finally old enough to go, I sat in the back row of the balcony and knew that’s what I was meant to do with my life.</p>
+      <p>That feeling took me to a dance studio in a strip mall, to Brigham Young University to study Musical Theatre, pervaded through a mission in Thailand, and brought me to New York City. I’ve done jobs I’m proud to have on my resume, but some of my favorite theatrical memories are the one-night-only concerts and the late-night kitchen rehearsals with best friends I'd met just weeks prior.</p>
+      <p>It was on tour with <em>Moulin Rouge!</em> that I picked up a camera for the first time since high school. As a dancer, the show was physically taxing, and I needed a creative outlet that wasn’t a Christina Aguilera or Katy Perry song- so I found film. I learned how to shoot, and I fell in love with capturing our lives on the road. It reminded me of just how special our ‘mundane’ really was.</p>
+      <p>Performing and photography feel similar to the magic I felt while catching lightning bugs in mason jars as a little boy. As an actor, I’d like to think that if I were a lightning bug, I’d be so happy knowing my light brought someone else joy. But as a photographer, I get to hold up the jar and experience the glow, capturing the beauty I see in every person and production. Whether I’m on stage or behind the lens, I’m here to catch the light.</p>
+    </article>`;
+}
+function renderAbout(){
+  view.innerHTML = aboutHTML();
+  scrollTo(0,0);
+}
+
+/* ---------- lightbox ---------- */
+let lbI=0, lbFrom=null, lbList=[];
+function lbShow(i){
+  lbI=(i+lbList.length)%lbList.length;
+  const x=lbList[lbI], im=$("#lbImg");
+  im.src=x.src; im.alt=x.alt;
+  $("#lbCt").textContent=(lbI+1)+" / "+lbList.length;
+}
+function openLB(i,list){
+  lbList=list||STILLS;
+  lbFrom=document.activeElement; lbShow(i);
+  $("#lb").classList.add("open"); document.body.style.overflow="hidden"; $("#lbX").focus();
+}
+function closeLB(){
+  $("#lb").classList.remove("open"); document.body.style.overflow="";
+  if(lbFrom&&lbFrom.focus) lbFrom.focus();
+}
+$("#lbX").onclick=closeLB;
+$("#lbPv").onclick=e=>{e.stopPropagation();lbShow(lbI-1);};
+$("#lbNx").onclick=e=>{e.stopPropagation();lbShow(lbI+1);};
+$("#lb").addEventListener("click",e=>{ if(e.target.id==="lb"||e.target.id==="lbImg") closeLB(); });
+addEventListener("keydown",e=>{
+  if(!$("#lb").classList.contains("open")) return;
+  if(e.key==="Escape") closeLB();
+  else if(e.key==="ArrowLeft") lbShow(lbI-1);
+  else if(e.key==="ArrowRight") lbShow(lbI+1);
+});
+(()=>{ let x0=null; const lb=$("#lb");
+  lb.addEventListener("touchstart",e=>x0=e.touches[0].clientX,{passive:true});
+  lb.addEventListener("touchend",e=>{ if(x0===null) return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>40) lbShow(lbI+(dx<0?1:-1)); x0=null; });
+})();
+addEventListener("popstate",()=>{ if($("#lb").classList.contains("open")) closeLB(); });
+
+/* ---------- on stage: blur the reel as you scroll ---------- */
+function heroFx(){
+  const v=document.getElementById("reel"); if(!v) return;
+  const p=Math.min(Math.max(scrollY/(innerHeight*0.7),0),1);
+  v.style.filter=`blur(${(p*9).toFixed(1)}px) brightness(${(1-p*0.55).toFixed(2)})`;
+  /* fade the reel out to plain black as the production stills arrive */
+  const st=document.querySelector(".stills"), hero=document.querySelector(".stage .hero");
+  if(st && hero){
+    const t=st.getBoundingClientRect().top;
+    const q=Math.min(Math.max((innerHeight*0.95 - t)/(innerHeight*0.45),0),1);
+    hero.style.opacity=(1-q).toFixed(2);
+  }
+  const fade=String(Math.max(0,1-p*2.5));
+  const b=document.getElementById("sound");
+  if(b){ b.style.opacity=fade; b.style.pointerEvents=p>0.4?"none":""; }
+}
+addEventListener("scroll",heroFx,{passive:true});
+addEventListener("resize",heroFx);
+
+/* ---------- router ---------- */
+const DESK = matchMedia("(min-width: 900px)");
+let rendered = null;      // the route currently drawn in #view
+let popFromSite = false;  // About panel was opened from another page of the site
+function navCurrent(h){
+  $("#navStage").setAttribute("aria-current", h==="on-stage");
+  $("#navPhoto").setAttribute("aria-current", h==="photography" || h.startsWith("p/"));
+  $("#navAbout").setAttribute("aria-current", h==="about");
+}
+function openAbout(){
+  const ap=$("#ap"), panel=$("#apPanel");
+  panel.innerHTML = aboutHTML(); panel.scrollTop = 0;
+  ap.hidden = false; document.documentElement.classList.add("ap-lock");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>ap.classList.add("open")));
+  setTimeout(()=>$("#apClose").focus({preventScroll:true}), 60);
+}
+function closeAbout(instant){
+  const ap=$("#ap"); if(ap.hidden) return;
+  ap.classList.remove("open"); document.documentElement.classList.remove("ap-lock");
+  const done=()=>{ if(!ap.classList.contains("open")){ ap.hidden=true; $("#apPanel").innerHTML=""; } };
+  instant ? done() : setTimeout(done, 380);
+}
+function leaveAbout(){ if(popFromSite) history.back(); else go(rendered || ""); }
+$("#apClose").addEventListener("click", leaveAbout);
+$("#apDim").addEventListener("click", leaveAbout);
+$("#ap").addEventListener("wheel", e=>{   // scrolling anywhere moves the About text
+  const panel=$("#apPanel"); if(panel.contains(e.target)) return;
+  e.preventDefault(); panel.scrollBy({top:e.deltaY, left:0});
+},{passive:false});
+addEventListener("keydown", e=>{ if(e.key==="Escape" && !$("#ap").hidden && !$("#lb").classList.contains("open")) leaveAbout(); });
+DESK.addEventListener("change", ()=>{ if(curRoute()==="about"){ closeAbout(true); if(rendered==="about") rendered=null; route(); } });
+
+/* clean addresses, one word each: /photography, /theatre, /portraits, /events, /video, /onstage, /about
+   (internal routes stay "p/theatrical" etc.; old #/ and /photography/... links still work) */
+const PATH_ALIAS = { theatrical:"theatre" };                       // internal gallery slug -> address
+function routeToPath(r){ r=(r||"").replace(/^#?\/?/,""); if(!r) return "/";
+  if(r.startsWith("p/")){ const s=r.slice(2); return "/"+(PATH_ALIAS[s]||s); }
+  if(r==="on-stage") return "/onstage";
+  return "/"+r; }
+function pathToRoute(p){ p=(p||"/").replace(/\/+$/,"").replace(/\.html$/,"").replace(/\/index$/,"");
+  if(!p) return ""; p=p.replace(/^\/photography\/(.+)$/,"/$1");  // old /photography/portraits style
+  let s=p.slice(1).toLowerCase();
+  if(s==="onstage"||s==="on-stage") return "on-stage";
+  if(s==="about"||s==="photography") return s;
+  if(s==="theatre"||s==="theater") s="theatrical";
+  if(PROJECTS.some(x=>x.slug===s) || ["backstage","on-film"].includes(s)) return "p/"+s;
+  return ""; }
+function curRoute(){ return pathToRoute(location.pathname); }
+function go(r){ const path=routeToPath(r); if(location.pathname!==path) history.pushState(null,"",path); route(); }
+function cleanLinks(root){ (root||document).querySelectorAll('a[href^="#/"]').forEach(a=>{ const r=a.getAttribute("href").slice(2); a.dataset.route=r; a.setAttribute("href",routeToPath(r)); }); }
+document.addEventListener("click", e=>{
+  if(e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a=e.target.closest && e.target.closest("a[data-route], a[href^='#/']"); if(!a) return;
+  const r = a.dataset.route!=null ? a.dataset.route : a.getAttribute("href").slice(2);
+  e.preventDefault(); go(r);
+});
+function route(){
+  const h = curRoute();
+  if(h==="about" && DESK.matches){
+    popFromSite = rendered!==null && rendered!=="about";
+    if(!popFromSite) renderRoute("");          // opened directly: show the home page behind it
+    navCurrent("about"); openAbout(); return;
+  }
+  const popOpen = !$("#ap").hidden;
+  closeAbout();
+  if(popOpen && rendered===h){ navCurrent(h); return; }   // back to the page that was under the panel
+  renderRoute(h);
+}
+function renderRoute(h){
+  clearInterval(timer);
+  let r = "home";
+  if(h.startsWith("p/")){ r="project"; renderProject(h.slice(2)); const f=document.getElementById("lbk"); if(f){ fitLookbook(); f.src="book.html"; } }
+  else if(h==="about"){ r="about"; renderAbout(); }
+  else if(h==="on-stage"){ r="stage"; renderStage(); }
+  else if(h==="photography"){ renderHome(true); }
+  else { renderHome(false); }
+  document.body.dataset.route = r;
+  rendered = h;
+  cleanLinks(view);
+  navCurrent(h);
+  if(!view.querySelector("h1")){
+    const t = {home:"Luke Rands, photographer and performer", stage:"Luke Rands on stage", about:"About Luke Rands"}[r] || "Luke Rands";
+    view.insertAdjacentHTML("afterbegin", `<h1 class="vh">${t}</h1>`);
+  }
+  syncBar();
+}
+// the phone's top bar takes the page's own background color (no more colors sampled from photos)
+function syncBar(){
+  const html=document.documentElement; html.classList.remove("booting");
+  const sp = document.getElementById("splash");
+  const splashUp = !!sp && !html.classList.contains("nosplash") && !sp.classList.contains("gone") && sp.style.display!=="none";
+  let c = splashUp ? "#000000" : getComputedStyle(document.body).backgroundColor;
+  if(!c || c==="rgba(0, 0, 0, 0)" || c==="transparent") c = "#000000";
+  const r = document.body.dataset.route;
+  if(r==="home" || r==="stage") c = "#000000";      // full-bleed photo and video pages read best with a black bar
+  const m=document.getElementById("themeColor"); if(m && m.content!==c) m.content=c;
+}
+$("#navPhoto").addEventListener("click", e=>{
+  if(curRoute()==="photography"){ e.preventDefault(); go(""); }
+});
+addEventListener("popstate", route);
+if(location.hash.startsWith("#/")) history.replaceState(null,"",routeToPath(location.hash.slice(2)));   // old #/ links still work
+if(location.pathname!==routeToPath(curRoute())) history.replaceState(null,"",routeToPath(curRoute()));   // tidy old or alternate addresses to the one-word version
+cleanLinks(document);
+route();
+
+/* ---------- splash ---------- */
+// The splash can be shown again (the logo brings it back). It fades away on a tap, click, scroll or key,
+// or on its own after the video has played through twice.
+const Splash = (function(){
+  const s=$("#splash"), name=$("#splashName"), v=$("#splashVid"), html=document.documentElement;
+  const S8 = matchMedia("(min-width: 900px)"), row=$("#s8row");
+  let ready=false, open=false, plays=0, fallback=0, s8raf=0, s8ctx=[], s8poster=null;
+
+  function setup(){
+    if(ready) return; ready=true;
+    name.insertAdjacentHTML("beforeend", '<i class="s1" aria-hidden="true"></i><i class="s2" aria-hidden="true"></i>');
+    // silent background video
+    v.muted=true; v.defaultMuted=true; v.loop=false; v.src="media/video/splash.mp4";
+    // two plays, then the splash fades by itself
+    v.addEventListener("ended", ()=>{ if(!open) return; plays++;
+      if(plays>=2) leave(); else { try{ v.currentTime=0; }catch(e){} const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{}); } });
+    // desktop: the same video three times across, in Super 8 frames, all painted from one playing copy
+    const marks=[[ [12,3],[22,9],[54,2],[70,5],[86,2] ],[ [6,4],[18,8],[47,2],[63,6],[88,2] ],[ [10,3],[25,7],[50,2],[68,5],[84,3] ]];
+    row.innerHTML = marks.map(groups=>{
+      const rects = groups.map(([x,n])=>Array.from({length:n},(_,j)=>`<rect x="${x+j*1.9}" y="0" width="1.35" height="6" rx=".15"/>`).join("")).join("");
+      return `<div class="s8"><svg class="edge" viewBox="0 0 100 6" preserveAspectRatio="none">${rects}</svg>`+
+             `<canvas></canvas>`+
+             `<svg class="foot" viewBox="0 0 100 6" preserveAspectRatio="xMidYMid meet"><path d="M38 .6 L44.5 3 L38 5.4Z"/><rect x="45.6" y=".6" width="1.5" height="4.8"/><rect x="47.8" y=".6" width="1.5" height="4.8"/><path d="M92 .6 L98.5 3 L92 5.4Z"/></svg></div>`;
+    }).join("");
+    s8ctx=[...row.querySelectorAll("canvas")].map(c=>c.getContext("2d"));
+    const poster=new Image(); poster.onload=()=>{ s8poster=poster; if(!(v.readyState>=2)) s8ctx.forEach(c=>coverDraw(c,poster,540,960)); }; poster.src=v.getAttribute("poster");
+    addEventListener("resize", sizeS8);
+    // ways to enter the site
+    const go=e=>{ if(!open) return; if(e && e.cancelable) e.preventDefault(); leave(); };
+    s.addEventListener("click", go);
+    s.addEventListener("touchend", go, {passive:false});
+    s.addEventListener("touchmove", go, {passive:false});   // a swipe/scroll on phones
+    s.addEventListener("wheel", go, {passive:false});       // mouse wheel or trackpad
+    s.addEventListener("keydown", e=>{ if(["Enter"," ","Escape","ArrowDown","ArrowUp","PageDown","PageUp"].includes(e.key)) go(e); });
+  }
+  function sizeS8(){   // canvases match their on-screen size (sharp on high-density screens)
+    const d=Math.min(2, devicePixelRatio||1);
+    s8ctx.forEach(c=>{ const r=c.canvas.getBoundingClientRect(), w=Math.round(r.width*d), h=Math.round(r.height*d);
+      if(w && h && (c.canvas.width!==w || c.canvas.height!==h)){ c.canvas.width=w; c.canvas.height=h; } });
+    if(!(v.readyState>=2) && s8poster) s8ctx.forEach(c=>coverDraw(c,s8poster,540,960));
+  }
+  const FOCUS_X=0.1, FOCUS_Y=0;   // where to keep when cropping: the dancer stands left of centre, head near the top
+  function coverDraw(c, src, sw, sh){   // fill the panel, cropping around the focus point instead of letterboxing
+    const W=c.canvas.width, H=c.canvas.height; if(!W||!H) return;
+    const k=Math.max(W/sw, H/sh), cw=W/k, ch=H/k;
+    c.drawImage(src, (sw-cw)*FOCUS_X, (sh-ch)*FOCUS_Y, cw, ch, 0, 0, W, H);
+  }
+  function paintS8(){
+    if(S8.matches && v.readyState>=2) s8ctx.forEach(c=>coverDraw(c, v, v.videoWidth||540, v.videoHeight||960));
+    s8raf=requestAnimationFrame(paintS8);
+  }
+
+  function showSplash(){
+    setup(); open=true; plays=0;
+    html.classList.remove("nosplash");
+    s.style.display=""; s.classList.remove("gone");
+    try{ v.currentTime=0; }catch(e){} const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{});
+    cancelAnimationFrame(s8raf); sizeS8(); paintS8();
+    // if the video can't play at all (e.g. a phone in Low Power Mode), don't keep anyone waiting
+    clearTimeout(fallback); fallback=setTimeout(()=>{ if(open && (v.paused || v.readyState<2)) leave(); }, 16000);
+    try{ s.focus({preventScroll:true}); }catch(e){}
+    try{ syncBar(); }catch(e){}
+  }
+  function leave(){
+    if(!open) return; open=false; clearTimeout(fallback);
+    try{ if(document.querySelector(".home") && !document.querySelector(".home.listing")){ show(0); restart(); } }catch(e){}
+    s.classList.add("gone"); try{sessionStorage.setItem("lr-splash","1")}catch(e){}
+    setTimeout(()=>{ if(open) return; cancelAnimationFrame(s8raf); try{ v.pause(); }catch(e){} s.style.display="none"; try{ syncBar(); }catch(e){} }, 900);
+  }
+  return { show:showSplash, leave, isOpen:()=>open };
+})();
+{ let seen=false; try{ seen = sessionStorage.getItem("lr-splash")==="1"; }catch(e){}
+  if(seen) $("#splash").style.display="none"; else Splash.show(); }
+// the logo brings the splash back (over the landing page)
+document.querySelector(".logo").addEventListener("click", e=>{
+  e.preventDefault();
+  if(curRoute()!=="") go("");
+  Splash.show();
+});
+</script>
+</body>
+</html>

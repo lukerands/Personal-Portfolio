@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flats + Heels — Backstage Lookbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400;1,62..125,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --velvet:#2a0a10; --velvet-deep:#120407; --spot:#5b1420;
+  --ink:#f3e6d8; --ink-dim:#c9ab9a; --brass:#d9a441;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --velvet:#24080d; --velvet-deep:#0e0305; --spot:#521119; }
+}
+:root[data-theme="dark"]{ --velvet:#24080d; --velvet-deep:#0e0305; --spot:#521119; }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{
+  background:var(--velvet-deep);
+  background-image:radial-gradient(ellipse 70% 60% at 50% 42%, var(--spot) 0%, var(--velvet) 45%, var(--velvet-deep) 100%);
+  color:var(--ink);
+  font-family:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior:none;
+}
+.stage{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:12px 8px; }
+.title{
+  font-style:italic; font-weight:800; font-stretch:112%;
+  font-size:clamp(1rem, 2.4vw, 1.35rem); letter-spacing:-.01em; line-height:1;
+  margin:0; color:var(--ink);
+}
+.title span{ font-weight:400; font-style:normal; font-stretch:90%; color:var(--ink-dim); margin-left:.5em; }
+.book-wrap{
+  width:min(96vw, calc((100dvh - 150px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) * 0.7727 * 2));
+  max-width:1400px;
+  position:relative;
+}
+#book{ margin:0 auto; filter:drop-shadow(0 30px 40px rgba(0,0,0,.55)); }
+.page{ background:#fff; overflow:hidden; }
+.page img{ width:100%; height:100%; object-fit:cover; display:block; user-select:none; -webkit-user-drag:none; pointer-events:none; }
+.page.blank{ background:#fbf8f4; }
+/* inner gutter shading for a paper feel */
+.page.--left::after,.page.--right::after{ content:""; position:absolute; inset:0; pointer-events:none; }
+.page.--left::after{ background:linear-gradient(to left, rgba(0,0,0,.18), rgba(0,0,0,0) 6%); }
+.page.--right::after{ background:linear-gradient(to right, rgba(0,0,0,.18), rgba(0,0,0,0) 6%); }
+.page.hard::after{ display:none; }
+
+.controls{ display:flex; align-items:center; gap:18px; font-size:.9rem; color:var(--ink-dim); }
+.controls button{
+  appearance:none; border:1px solid rgba(243,230,216,.28); background:transparent; color:var(--ink);
+  width:44px; height:44px; border-radius:50%; font-size:1.1rem; cursor:pointer;
+  display:grid; place-items:center; transition:background .2s, border-color .2s;
+}
+.controls button:hover{ background:rgba(243,230,216,.08); border-color:var(--brass); }
+.controls button:focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+.controls button:disabled{ opacity:.3; cursor:default; }
+#counter{ min-width:8.5em; text-align:center; font-variant-numeric:tabular-nums; }
+.hint .rotate{ margin-top:4px; }
+.hint{ text-align:center; font-size:.78rem; color:var(--ink-dim); opacity:.8; margin:0; transition:opacity .6s; }
+.hint.gone{ opacity:0; }
+
+/* fallback spread viewer if the flip engine can't load */
+.fallback #book{ display:flex; aspect-ratio:1224/792; width:100%; }
+.fallback .page{ position:relative; width:50%; height:100%; display:none; }
+.fallback .page.on{ display:block; }
+.fallback .page.solo-r{ margin-left:50%; }
+.rotate{ display:none; }
+@media (orientation: portrait) and (max-width: 700px){ .rotate{ display:block; } }
+
+@media (prefers-reduced-motion: reduce){ .hint{ transition:none; } }
+
+/* embedded on lukerands site: transparent, site-colored controls */
+html,body{ background:transparent !important; background-image:none !important; }
+:root{ --ink:#000000; --ink-dim:#5b5f6b; }
+@media (prefers-color-scheme: dark){ :root{ --ink:#ffffff; --ink-dim:#a3a7b3; } }
+.controls button{ border-color:color-mix(in srgb, currentColor 30%, transparent); }
+.controls button:hover{ background:color-mix(in srgb, currentColor 8%, transparent); border-color:currentColor; }
+.controls button:focus-visible{ outline-color:#2438e8; }
+#book{ filter:drop-shadow(0 18px 28px rgba(0,0,0,.28)); }
+
+/* closed book sits centered; opens to a centered spread */
+.book-wrap{ transform:translateX(0); }
+.book-wrap.anim{ transition:transform .9s cubic-bezier(.45,0,.2,1); }
+.book-wrap.shut-front{ transform:translateX(-25%); }
+.book-wrap.shut-back{ transform:translateX(25%); }
+@media (prefers-reduced-motion: reduce){ .book-wrap.anim{ transition-duration:.3s; } }
+
+/* embedded: sit at the top of the frame, no dead space above */
+.stage{ justify-content:flex-start !important; padding-top:2px !important; }
+
+/* embedded: book fills the frame height exactly (frame is sized by the host page) */
+.stage{ gap:10px !important; padding-bottom:0 !important; }
+.book-wrap{ width:min(96vw, calc((100vh - 84px) * 1.545)) !important; }
+
+/* built-in page turner */
+#book{position:relative;width:100%;aspect-ratio:1224/792;perspective:2600px;touch-action:pan-y;cursor:pointer;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#book.dragging{cursor:grabbing}
+#book .src{display:none}
+#book .slot,#book .leaf{position:absolute;top:0;height:100%;width:50%}
+#book .slot.L{left:0} #book .slot.R{left:50%}
+#book .leaf{display:none;z-index:3;transform-style:preserve-3d;will-change:transform}
+#book .leaf.fwd{left:50%;transform-origin:0 50%}
+#book .leaf.bwd{left:0;transform-origin:100% 50%}
+#book .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+#book .face.back{transform:rotateY(180deg)}
+#book .slot .page,#book .face .page{position:absolute;inset:0;display:block}
+#book .shade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+#book canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* no buttons or page numbers: just the book and a one-line invitation */
+.controls{display:none !important}
+.hint .rotate{display:none !important}
+.hint,.hint.gone{opacity:.75 !important;font-style:italic;letter-spacing:.01em}
+/* room around the book so its shadow can fade out instead of being cut off */
+.stage{padding-top:70px !important;gap:16px !important}
+#book{filter:drop-shadow(0 0 22px rgba(0,0,0,.13)) drop-shadow(0 18px 32px rgba(0,0,0,.26)) !important}
+.book-wrap{width:min(96vw, calc((100vh - 160px) * 1.545)) !important}
+@media (max-width:799px){ .book-wrap{width:min(calc(100vw - 55px), calc((100vh - 160px) * 1.545)) !important} }
+</style>
+</head>
+<body>
+<main class="stage">
+  <div class="book-wrap">
+    <div id="book">
+<div class="page hard" data-density="hard"><img src="media/book/aefdcaf6659a.webp" alt="Flats + Heels front cover"></div>
+<div class="page" data-label="Inside cover"><img src="media/book/5668670ed272.webp" alt="Handwritten note: Thanks for everything chickens! — Luke Rands"></div>
+<div class="page" data-label="Page 1"><img src="media/book/063600c43d90.jpg" alt="Page 1"></div>
+<div class="page" data-label="Page 2"><img src="media/book/2309bcaaf58f.jpg" alt="Page 2"></div>
+<div class="page" data-label="Page 3"><img src="media/book/943a151f2888.webp" alt="Page 3"></div>
+<div class="page" data-label="Page 4"><img src="media/book/fbf1b0496452.webp" alt="Page 4"></div>
+<div class="page" data-label="Page 5"><img src="media/book/ced4cd5e915d.webp" alt="Page 5"></div>
+<div class="page" data-label="Page 6"><img src="media/book/f227d9f0a979.jpg" alt="Page 6"></div>
+<div class="page" data-label="Page 7"><img src="media/book/0da5f35e895c.jpg" alt="Page 7"></div>
+<div class="page" data-label="Page 8"><img src="media/book/a677edb60e9e.webp" alt="Page 8"></div>
+<div class="page" data-label="Page 9"><img src="media/book/b35ae94b13ad.webp" alt="Page 9"></div>
+<div class="page" data-label="Page 10"><img src="media/book/2fcf369e2959.jpg" alt="Page 10"></div>
+<div class="page" data-label="Page 11"><img src="media/book/f2723d941baf.webp" alt="Page 11"></div>
+<div class="page" data-label="Page 12"><img src="media/book/a54956d82ce5.webp" alt="Page 12"></div>
+<div class="page" data-label="Page 13"><img src="media/book/e18add569af0.webp" alt="Page 13"></div>
+<div class="page" data-label="Page 14"><img src="media/book/5d4a98a08dab.webp" alt="Page 14"></div>
+<div class="page" data-label="Page 15"><img src="media/book/15edd406821f.webp" alt="Page 15"></div>
+<div class="page" data-label="Page 16"><img src="media/book/0fdf632c658e.webp" alt="Page 16"></div>
+<div class="page" data-label="Page 17"><img src="media/book/42f2832f762e.webp" alt="Page 17"></div>
+<div class="page" data-label="Page 18"><img src="media/book/c491bdacc206.webp" alt="Page 18"></div>
+<div class="page" data-label="Page 19"><img src="media/book/22ed83af87fa.webp" alt="Page 19"></div>
+<div class="page" data-label="Page 20"><img src="media/book/47393ac6dc3b.webp" alt="Page 20"></div>
+<div class="page" data-label="Page 21"><img src="media/book/59bc21d99f64.webp" alt="Page 21"></div>
+<div class="page" data-label="Page 22"><img src="media/book/00eac93150f9.webp" alt="Page 22"></div>
+<div class="page" data-label="Page 23"><img src="media/book/463ef0fa4b78.webp" alt="Page 23"></div>
+<div class="page" data-label="Page 24"><img src="media/book/8d6271bca535.webp" alt="Page 24"></div>
+<div class="page" data-label="Page 25"><img src="media/book/cdbbfb4c4b05.webp" alt="Page 25"></div>
+<div class="page" data-label="Page 26"><img src="media/book/a5bad04d3d01.webp" alt="Page 26"></div>
+<div class="page" data-label="Page 27"><img src="media/book/09d8c40acd33.webp" alt="Page 27"></div>
+<div class="page" data-label="Page 28"><img src="media/book/809873d8bf76.webp" alt="Page 28"></div>
+<div class="page" data-label="Page 29"><img src="media/book/3f916eccfcf3.jpg" alt="Page 29"></div>
+<div class="page" data-label="Page 30"><img src="media/book/b2e77ff0a3a1.webp" alt="Page 30"></div>
+<div class="page" data-label="Page 31"><img src="media/book/1fbe7224c37f.webp" alt="Page 31"></div>
+<div class="page" data-label="Page 32"><img src="media/book/26647dc1ea48.jpg" alt="Page 32"></div>
+<div class="page" data-label="Page 33"><img src="media/book/9d7362cbcee8.webp" alt="Page 33"></div>
+<div class="page" data-label="Page 34"><img src="media/book/107479fbda48.webp" alt="Page 34"></div>
+<div class="page" data-label="Page 35"><img src="media/book/8c31832f6273.webp" alt="Page 35"></div>
+<div class="page" data-label="Page 36"><img src="media/book/8128312f4c5d.webp" alt="Page 36"></div>
+<div class="page" data-label="Page 37"><img src="media/book/c7298e334060.webp" alt="Page 37"></div>
+<div class="page" data-label="Page 38"><img src="media/book/573437cf9f09.jpg" alt="Page 38"></div>
+<div class="page" data-label="Page 39"><img src="media/book/153006c20392.webp" alt="Page 39"></div>
+<div class="page" data-label="Page 40"><img src="media/book/dd3078fd5c2d.webp" alt="Page 40"></div>
+<div class="page" data-label="Inside back cover"><img src="media/book/d43d74d557d9.webp" alt="Performer in a red feathered headdress"></div>
+<div class="page hard" data-density="hard"><img src="media/book/b65dff433855.webp" alt="Back cover"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="prev" aria-label="Previous page">&#8592;</button>
+    <div id="counter" aria-live="polite">Cover</div>
+    <button id="next" aria-label="Next page">&#8594;</button>
+  </div>
+  <p class="hint" id="hint">(it’s a book, turn the page!)<span class="rotate">Turn your phone sideways for a bigger spread</span></p>
+</main>
+
+<script>
+(function(){
+  var book = document.getElementById('book');
+  var pages = Array.prototype.slice.call(book.querySelectorAll('.page'));
+  var total = pages.length;
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  var counter = document.getElementById('counter'), hint = document.getElementById('hint');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wrap = book.closest('.book-wrap') || book.parentNode;
+
+  /* every page image is loaded and decoded once; the book is drawn on a canvas from these */
+  var src = document.createElement('div'); src.className = 'src';
+  pages.forEach(function(p){ src.appendChild(p); });
+  var imgs = pages.map(function(p){ return p.querySelector('img'); });
+  // pages listed here stay in the book but are skipped: never shown when paging or during the opening animation.
+  // Remove a label from the list to bring that page back.
+  var HIDDEN_PAGES = ["Page 8","Page 9","Page 12","Page 13"];
+  (function(){
+    var keep = pages.map(function(p){ return HIDDEN_PAGES.indexOf(p.getAttribute('data-label')) < 0; });
+    pages = pages.filter(function(_,i){ return keep[i]; }); imgs = imgs.filter(function(_,i){ return keep[i]; });
+    total = pages.length;
+  })();
+  book.innerHTML = '<canvas aria-hidden="true"></canvas>';
+  book.appendChild(src);
+  var cv = book.querySelector('canvas'), ctx = cv.getContext('2d');
+  imgs.forEach(function(im){ if(!im) return;
+    if(im.decode) im.decode().then(draw, function(){}); im.addEventListener('load', draw); });
+
+  var K = Math.floor(total / 2);   // last spread (back cover alone on the left)
+  var k = 0;
+  var START_LABEL = "Pages 10\u201311";   // the book opens on this spread                       // spread k: left page 2k-1, right page 2k
+  var turn = null;                 // {dir, t, cy, oy}
+  var raf = 0, goal = -1, CW = 0, CH = 0, dpr = 1;
+
+  function size(){
+    var r = book.getBoundingClientRect();
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    CW = r.width; CH = r.height;
+    cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr);
+    draw();
+  }
+  if(window.ResizeObserver) new ResizeObserver(size).observe(book); else addEventListener('resize', size);
+
+  /* ---------- drawing helpers ---------- */
+  function ok(i){ return i >= 0 && i < total; }
+  function isCover(i){ return i === 0 || i === total - 1; }
+  // draw page i into the rect, image "cover"-fitted; flip mirrors it horizontally
+  function drawPage(i, x, w, h, flip, spineAtLeft){
+    if(!ok(i)) return;
+    ctx.save();
+    ctx.fillStyle = '#fff'; ctx.fillRect(x, 0, w, h);
+    var im = imgs[i];
+    if(im && im.complete && im.naturalWidth){
+      var iw = im.naturalWidth, ih = im.naturalHeight, s = Math.max(w / iw, h / ih);
+      var sw = w / s, sh = h / s, sx = (iw - sw) / 2, sy = (ih - sh) / 2;
+      if(flip){ ctx.translate(x + w, 0); ctx.scale(-1, 1); ctx.drawImage(im, sx, sy, sw, sh, 0, 0, w, h); }
+      else ctx.drawImage(im, sx, sy, sw, sh, x, 0, w, h);
+    }
+    ctx.restore();
+    if(!isCover(i)){ // soft gutter shading along the spine
+      var gx = spineAtLeft ? x : x + w, g = ctx.createLinearGradient(gx, 0, gx + (spineAtLeft ? 1 : -1) * w * 0.07, 0);
+      g.addColorStop(0, 'rgba(0,0,0,.2)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(x, 0, w, h);
+    }
+  }
+  function clipPoly(poly, M, n, keepFlap){ // keep side where dot(v-M,n) <= 0 (flap) or >= 0
+    var out = [], f = function(v){ var d = (v[0]-M[0])*n[0] + (v[1]-M[1])*n[1]; return keepFlap ? -d : d; };
+    for(var i = 0; i < poly.length; i++){
+      var a = poly[i], b = poly[(i+1) % poly.length], fa = f(a), fb = f(b);
+      if(fa >= 0) out.push(a);
+      if((fa >= 0) !== (fb >= 0)){ var t = fa / (fa - fb); out.push([a[0] + (b[0]-a[0])*t, a[1] + (b[1]-a[1])*t]); }
+    }
+    return out;
+  }
+  function path(poly){ ctx.beginPath(); poly.forEach(function(p, i){ i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }); ctx.closePath(); }
+
+  function draw(){
+    if(!CW) return;
+    var W = CW / 2, H = CH;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, CW, CH);
+    if(!turn || turn.t <= 0.0005){ drawPage(2*k-1, 0, W, H, false, false); drawPage(2*k, W, W, H, false, true); return; }
+    if(turn.t >= 0.9995){ var k2 = k + turn.dir; drawPage(2*k2-1, 0, W, H, false, false); drawPage(2*k2, W, W, H, false, true); return; }
+
+    // Work in "forward space": the turning page is always on the right. A backward turn is drawn mirrored.
+    var mir = turn.dir < 0;
+    if(mir){ ctx.translate(CW, 0); ctx.scale(-1, 1); }
+    var other, cur, under, back;
+    if(!mir){ other = 2*k-1; cur = 2*k;   back = 2*k+1; under = 2*k+2; }
+    else    { other = 2*k;   cur = 2*k-1; back = 2*k-2; under = 2*k-3; }
+
+    // the dragged corner travels from the outer edge to the spine side along a gentle arc
+    var t = turn.t, cy = turn.cy * H, up = turn.cy ? -1 : 1;
+    var P = [2*W - t*2*W, cy + up * H * 0.16 * Math.sin(Math.PI * t) + (turn.oy || 0)];
+    // paper can't stretch: keep the corner within reach of the spine
+    var S = [W, cy], d = Math.hypot(P[0]-S[0], P[1]-S[1]);
+    if(d > W){ P = [S[0] + (P[0]-S[0]) * W/d, S[1] + (P[1]-S[1]) * W/d]; }
+    var S2 = [W, H - cy], D = Math.hypot(W, H); d = Math.hypot(P[0]-S2[0], P[1]-S2[1]);
+    if(d > D){ P = [S2[0] + (P[0]-S2[0]) * D/d, S2[1] + (P[1]-S2[1]) * D/d]; }
+    var C = [2*W, cy], n = [P[0]-C[0], P[1]-C[1]], nl = Math.hypot(n[0], n[1]);
+    if(nl < 0.5){ drawPage(other, 0, W, H, mir, false); drawPage(cur, W, W, H, mir, true); return; }
+    var M = [(C[0]+P[0])/2, (C[1]+P[1])/2], u = [n[0]/nl, n[1]/nl];
+    var rect = [[W,0],[2*W,0],[2*W,H],[W,H]];
+    // all turn shading eases in as the page lifts and out as it lands, so nothing pops at either end
+    var sf = Math.pow(Math.sin(Math.PI * t), 0.75);
+    function A(x){ return (x * sf).toFixed(3); }
+    var flap = clipPoly(rect, M, n, true), keep = clipPoly(rect, M, n, false);
+
+    // 1. the facing page that stays put
+    drawPage(other, 0, W, H, mir, false);
+    // 2. the page being revealed underneath, with the shadow of the lifting sheet
+    if(flap.length > 2){
+      ctx.save(); path(flap); ctx.clip();
+      drawPage(under, W, W, H, mir, true);
+      var g = ctx.createLinearGradient(M[0], M[1], M[0] - u[0]*W*0.35, M[1] - u[1]*W*0.35);
+      g.addColorStop(0, 'rgba(0,0,0,' + A(0.38) + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(W, 0, W, H);
+      ctx.restore();
+    }
+    // 3. what's left of the current page
+    if(keep.length > 2){ ctx.save(); path(keep); ctx.clip(); drawPage(cur, W, W, H, mir, true); ctx.restore(); }
+    // 4. the folded-over flap, showing the back of the sheet (reflected across the crease)
+    if(flap.length > 2){
+      var a = u[1]*u[1] - u[0]*u[0], b = -2*u[0]*u[1];       // reflection across the crease line
+      var rx = M[0] - (a*M[0] + b*M[1]), ry = M[1] - (b*M[0] - a*M[1]);
+      ctx.save();
+      ctx.transform(a, b, b, -a, rx, ry);
+      path(flap);
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,' + A(0.35) + ')'; ctx.shadowBlur = 22 * dpr; ctx.fillStyle = '#fff'; ctx.fill(); ctx.restore();
+      ctx.clip();
+      // the back page lies mirrored in this space so it reads correctly once folded over
+      drawPage(back, W, W, H, !mir, true);
+      // paper curvature: darker at the crease, a soft sheen just past it
+      var g2 = ctx.createLinearGradient(M[0], M[1], M[0] - u[0]*W*0.6, M[1] - u[1]*W*0.6);
+      g2.addColorStop(0, 'rgba(0,0,0,' + A(0.22) + ')'); g2.addColorStop(0.07, 'rgba(255,255,255,' + A(0.16) + ')');
+      g2.addColorStop(0.3, 'rgba(255,255,255,0)'); g2.addColorStop(1, 'rgba(0,0,0,' + A(0.10) + ')');
+      ctx.fillStyle = g2; ctx.fillRect(W, 0, W, H);
+      ctx.restore();
+    }
+    // crease shadow falling on the remaining page
+    if(keep.length > 2){
+      ctx.save(); path(keep); ctx.clip();
+      var g3 = ctx.createLinearGradient(M[0], M[1], M[0] + u[0]*W*0.12, M[1] + u[1]*W*0.12);
+      g3.addColorStop(0, 'rgba(0,0,0,' + A(0.18) + ')'); g3.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g3; ctx.fillRect(W, 0, W, H); ctx.restore();
+    }
+  }
+
+  /* ---------- state ---------- */
+  function place(state){
+    wrap.classList.toggle('shut-front', state === 'front');
+    wrap.classList.toggle('shut-back', state === 'back');
+  }
+  function stateFor(s){ return s <= 0 ? 'front' : (s >= K ? 'back' : 'open'); }
+  function label(){
+    if(k === 0) return 'Cover';
+    if(2*k >= total) return 'Back cover';
+    var a = pages[2*k-1].getAttribute('data-label'), b = pages[2*k] && pages[2*k].getAttribute('data-label');
+    var m = /^Page (\d+)$/;
+    if(a && b && m.test(a) && m.test(b)) return 'Pages ' + a.slice(5) + '\u2013' + b.slice(5);
+    if(a && b) return a + ' \u2013 ' + b;
+    return a || b || '';
+  }
+  function ui(){ counter.textContent = label(); prev.disabled = k <= 0; next.disabled = k >= K; }
+  var hinted = false;
+  function hideHint(){ if(!hinted){ hinted = true; hint.classList.add('gone'); } }
+
+  function begin(d, cy){
+    if((d > 0 && k >= K) || (d < 0 && k <= 0)) return false;
+    turn = { dir:d, t:0, cy: cy ? 1 : 0, oy:0 }; hideHint();
+    place(stateFor(k + d));
+    return true;
+  }
+  function tween(to, done, durOverride, easeOut){
+    cancelAnimationFrame(raf);
+    var from = turn.t, t0 = performance.now();
+    var dur = durOverride || (reduce ? 200 : 300 + 650 * Math.abs(to - from));
+    (function step(now){
+      var x = Math.min(1, (now - t0) / dur);
+      var e = easeOut ? 1 - (1-x)*(1-x) : (x < .5 ? 2*x*x : 1 - Math.pow(-2*x + 2, 2) / 2);
+      turn.t = from + (to - from) * e;
+      if(turn.oy) turn.oy *= 0.85;
+      draw();
+      if(x < 1) raf = requestAnimationFrame(step); else done();
+    })(t0);
+  }
+  function end(commit){
+    goal = commit ? 1 : 0;
+    tween(goal, function(){ if(goal === 1) k += turn.dir; goal = -1; turn = null; ui(); place(stateFor(k)); draw(); });
+  }
+  function settle(){ // finish a turn already in flight, instantly
+    if(!turn) return;
+    cancelAnimationFrame(raf);
+    if(goal === 1 || (goal === -1 && turn.t >= .5)) k += turn.dir;
+    goal = -1; turn = null; ui(); place(stateFor(k)); draw();
+  }
+  function flip(d, cy){ settle(); if(begin(d, cy)) end(true); }
+
+  /* ---------- pointer: tap a page, or drag any part of it ---------- */
+  var ptr = null;
+  book.addEventListener('pointerdown', function(e){
+    if(e.button > 0) return;
+    fanning = false; fanDone = true;
+    settle(); endFan();
+    var r = book.getBoundingClientRect();
+    ptr = { id:e.pointerId, x:e.clientX, y:e.clientY, side:(e.clientX - r.left) < r.width/2 ? 'L' : 'R',
+            top:(e.clientY - r.top) < r.height/2, w:r.width/2, drag:false, vx:0, lx:e.clientX, lt:e.timeStamp };
+    try{ book.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  book.addEventListener('pointermove', function(e){
+    if(!ptr || e.pointerId !== ptr.id) return;
+    var dx = e.clientX - ptr.x, dy = e.clientY - ptr.y;
+    if(!ptr.drag){
+      if(Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+      if(!begin(dx < 0 ? 1 : -1, !ptr.top)){ ptr.drag = 'none'; return; }
+      ptr.drag = true; book.classList.add('dragging');
+    }
+    if(ptr.drag !== true) return;
+    var dt = e.timeStamp - ptr.lt;
+    if(dt > 0){ ptr.vx = (e.clientX - ptr.lx) / dt; ptr.lx = e.clientX; ptr.lt = e.timeStamp; }
+    turn.t = Math.max(0, Math.min(1, (turn.dir > 0 ? -dx : dx) / (ptr.w * 1.15)));
+    turn.oy = Math.max(-CH*0.15, Math.min(CH*0.15, dy * 0.5));
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(draw);
+  });
+  function release(e, cancelled){
+    if(!ptr || e.pointerId !== ptr.id) return;
+    var p = ptr; ptr = null; book.classList.remove('dragging');
+    if(p.drag === true){
+      var v = turn.dir > 0 ? -p.vx : p.vx;
+      end(!cancelled && (turn.t > .35 || (v > .35 && turn.t > .04)));
+      return;
+    }
+    if(p.drag || cancelled) return;
+    var r = book.getBoundingClientRect(); // tap: right page forward, left page back
+    if(p.side === 'R' && ok(2*k)) flip(1, !p.top);
+    else if(p.side === 'L' && ok(2*k-1)) flip(-1, !p.top);
+  }
+  book.addEventListener('pointerup', function(e){ release(e, false); });
+  book.addEventListener('pointercancel', function(e){ release(e, true); });
+  book.addEventListener('dragstart', function(e){ e.preventDefault(); });
+
+  prev.addEventListener('click', function(){ flip(-1, 1); });
+  next.addEventListener('click', function(){ flip(1, 1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); flip(1, 1); }
+    if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); flip(-1, 1); }
+  });
+
+  function spreadOf(lab){ for(var t=0;t<=K;t++){ k=t; if(label()===lab) return t; } return 0; }
+  var TARGET = 0, fanning = false, fanDone = false;
+  if(reduce){ k = spreadOf(START_LABEL); }                    // no animation: open on the can-can spread
+  else { TARGET = spreadOf(START_LABEL); k = 0; }             // closed on the cover until it is scrolled into view
+  function endFan(){ fanning = false; fanDone = true; }
+  // turns speed up through the middle and ease into the last page
+  var FAN_TOTAL = 1850, FAN_GROW = 1.4, FAN_FIRST_EXTRA = 110;   // the opening turn (off the cover) lingers a little   // ms spent turning pages; each turn ~40% slower than the one before
+  function fanDur(n, total){ var a = FAN_TOTAL*(FAN_GROW-1)/(Math.pow(FAN_GROW,total)-1); return Math.round(a*Math.pow(FAN_GROW,n)) + (n===0 ? FAN_FIRST_EXTRA : 0); }
+  function fanOpen(){
+    if(fanDone || fanning || k >= TARGET) return;
+    fanning = true; var total = TARGET - k, n = 0;
+    (function next(){
+      if(!fanning) return;
+      if(k >= TARGET || !begin(1, 1)){ endFan(); return; }
+      goal = 1;
+      tween(1, function(){ goal=-1; k += 1; turn=null; ui(); place(stateFor(k)); draw(); n++;
+        if(k >= TARGET){ endFan(); } else next(); }, fanDur(n, total), true);
+    })();
+  }
+  document.addEventListener('keydown', function(){ fanning = false; fanDone = true; }, true);
+  if(!reduce){
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && e.intersectionRatio >= 0.6){ io.disconnect(); setTimeout(fanOpen, 20); } }); }, {threshold:[0.6]});
+      io.observe(book);
+    } else setTimeout(fanOpen, 600);
+  }
+  ui(); place(stateFor(k)); size();
+  setTimeout(function(){ wrap.classList.add('anim'); }, 50);
+})();
+</script>
+</body>
+</html>
