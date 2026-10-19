@@ -119,6 +119,9 @@ html,body{ background:transparent !important; background-image:none !important; 
 .controls{display:none !important}
 .hint .rotate{display:none !important}
 .hint,.hint.gone{opacity:.75 !important;font-style:italic;letter-spacing:.01em}
+/* invitation under the book: same type and slate color as the photo credits on the site */
+.hint,.hint.gone{opacity:1 !important;font-style:italic;letter-spacing:normal;font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;font-size:14px;line-height:1.5;color:#585d67}
+@media (prefers-color-scheme: dark){ .hint,.hint.gone{color:#a3a8b4} }   /* a shade lighter than the credits */
 /* room around the book so its shadow can fade out instead of being cut off */
 .stage{padding-top:70px !important;gap:16px !important}
 #book{filter:drop-shadow(0 0 22px rgba(0,0,0,.13)) drop-shadow(0 18px 32px rgba(0,0,0,.26)) !important}
@@ -181,7 +184,7 @@ html,body{ background:transparent !important; background-image:none !important; 
     <div id="counter" aria-live="polite">Cover</div>
     <button id="next" aria-label="Next page">&#8594;</button>
   </div>
-  <p class="hint" id="hint">(it’s a book, turn the page!)<span class="rotate">Turn your phone sideways for a bigger spread</span></p>
+  <p class="hint" id="hint">Go on, turn a page.<span class="rotate">Turn your phone sideways for a bigger spread</span></p>
 </main>
 
 <script>

@@ -132,6 +132,18 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .film figcaption{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.5}
 .film figcaption em{color:var(--ink);font-style:italic}
 .film figcaption span{display:block}
+/* a credit under a gallery section, styled like the film captions on the Video page */
+.sec-credit{margin:12px 20px 0;font-size:14px;color:#3a3d44;line-height:1.5;text-align:right}   /* the same slate as the Portraits names */
+.sec-credit em{color:inherit;font-style:italic}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .sec-credit{color:#8d93a0} }
+:root[data-theme="dark"] .sec-credit{color:#8d93a0}
+@media (max-width:799px){ .sec-credit .ci{display:block} }   /* phones: each credit on its own line */
+.sec-credit .nw{white-space:nowrap}
+/* a caption under a row of photos (Events): phones keep the page margin, desktop lines up with the photo column */
+.reel .row-credit{margin:12px 20px 0}
+@media (max-width:799px){ .row-credit .cm{display:none} .row-credit .ln2{display:block} }   /* phones: the place goes on its own line, without the comma */
+@media (min-width:800px){ .reel .row-credit{margin:12px 0 0;padding:0;max-width:none} }   /* on a narrow phone the venue drops to its own line in one piece */
+@media (min-width:800px){ .sec-credit{box-sizing:border-box;max-width:1100px;margin:12px auto 0;padding:0 36px} }   /* desktop: lines up with the left edge of the photo column */
 @media (max-width:520px){.film-cta{right:10px;bottom:10px;padding:7px 11px;font-size:13px}}
 /* ---------- portraits ---------- */
 .pt-flow{display:flex;flex-direction:column;gap:56px;margin-top:8px}
@@ -271,6 +283,23 @@ article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(44px,14vw,96px) *
 .logos li:last-child{margin-top:-16px;padding:34px 0;border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);width:min(100%,460px)}
 .logos:has(+ .tri){margin-bottom:34px !important}
 .logos img{width:min(100%,460px);max-height:130px;object-fit:contain}
+/* On Stage, phones: the reel sits at the top under the menu, Sound on just below it on the right, then the show logos (a little smaller); no scroll effects or arrow */
+@media (max-width:799px){
+  .stage .hero{position:relative;inset:auto;padding-top:72px;overflow:hidden}
+  .stage .hero video{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;transform:none}
+  .hero-space,.scroll-cue,.tap-hint{display:none}
+  .sound{position:static;display:block;width:fit-content;margin:10px 20px 0 auto}
+  .logos{margin-top:calc(44px + var(--logo-shift,0px));gap:calc(56px + var(--logo-gap,0px))}   /* nudged by sliceLogos() so a logo is always cut by the footer's top edge */
+  .logos img{width:min(85%,400px);max-height:110px}
+  .logos li:last-child{padding-top:18px}   /* a little less room above The Gilded Age so it can peek up from the bottom */
+  /* bottom of the screen: no hard edge; the logos fade softly into black behind Instagram / Contact me.
+     Once the production photos reach the bottom of the screen the fade goes away, so the photos rise in untouched (heroFx sets --stage-fade) */
+  body[data-route="stage"] .bar.bottom::before{content:"";position:absolute;left:0;right:0;bottom:0;height:calc(100% + 100px);z-index:-1;pointer-events:none;
+    background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 30%, rgba(0,0,0,.75) 55%, #000 78%);
+    opacity:var(--stage-fade,1)}
+}
+@media (max-width:799px) and (max-height:799px){ .logos li:not(:last-child) img{max-height:82px} }   /* shorter phones: the three show logos a touch smaller so The Gilded Age can still peek up */
+@media (min-width:800px){ .stage .hero video{cursor:pointer} }   /* desktop: the reel is clickable */
 .tri{list-style:none;width:calc(100% - 40px);margin:0 auto 36px;padding:0;justify-items:center;display:grid;grid-template-columns:1fr 1fr;gap:32px 28px;max-width:560px;align-items:center}
 .tri li{display:flex;justify-content:center}
 .tri{--gw:min(calc(100vw - 40px),460px)}
@@ -320,6 +349,13 @@ html.ap-lock nav{opacity:0;pointer-events:none}
 .lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;
   padding:calc(56px + env(safe-area-inset-top,0px)) 12px calc(56px + env(safe-area-inset-bottom,0px))}
 .lb.open{display:flex}
+/* photo credit under the picture in the viewer (only for photos that have one) */
+.lb{flex-direction:column}
+.lb .cap{display:none;margin:14px 0 0;text-align:center;color:rgba(255,255,255,.82);font-size:14px;line-height:1.5}
+.lb .cap em{font-style:italic;color:inherit}
+.lb .cap span{display:block}
+.lb.has-cap .cap{display:block}
+.lb.has-cap img{max-height:calc(100% - 70px)}
 .lb img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-out}
 .lb button{position:absolute;color:#fff;font-size:15px;padding:10px 14px}
 .lb .x{top:calc(10px + env(safe-area-inset-top,0px));right:10px}
@@ -392,8 +428,8 @@ html.booting,html.booting body{background:#000}
 /* galleries marked gapless (Events): photos touch; phones edge to edge, desktop stays in the centred column */
 .reel.gapless,.reel.gapless .rp{gap:0}
 /* rows come in pairs: two touching rows, a slight gap, two more, and so on */
-.reel.gapless > :nth-child(2n+3){margin-top:22px}
-@media (min-width:800px){ .reel.gapless > :nth-child(2n+3){margin-top:42px} }
+.reel.gapless > .blk{margin-top:22px}
+@media (min-width:800px){ .reel.gapless > .blk{margin-top:42px} }
 @media (max-width:799px){
   .reel.gapless{width:calc(100vw - var(--sbw,0px));max-width:none;margin-left:calc(50% - (100vw - var(--sbw,0px)) / 2);margin-right:0;padding-left:0;padding-right:0}
 }
@@ -448,6 +484,7 @@ html.booting,html.booting body{background:#000}
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <img id="lbImg" alt="">
+  <p class="cap" id="lbCap"></p>
   <button class="x" id="lbX" aria-label="Close">Close</button>
   <button class="pv" id="lbPv" aria-label="Previous photo">&#8592;</button>
   <button class="nx" id="lbNx" aria-label="Next photo">&#8594;</button>
@@ -490,7 +527,11 @@ const PROJECTS = [
     {src:"media/img/a1299e71542f.webp",w:1536,h:2048,alt:"Dancer in a deep lunge with one arm reaching skyward between library bookshelves, tall windows behind him"},
     {src:"media/img/1c954e7d9000.webp",w:1697,h:2560,alt:"Woman lying on a white studio floor, feet up and chin resting on her hands"}
   ] },
-  { slug:"events",       title:"Events",        count:13, hue:28, gapless:true, rows:[["W",5],["P",4,2],["P",8,9],["P",12,11,10],["W",0],["P",1,3]], photos:[
+  { slug:"events",       title:"Events",        count:13, hue:28, gapless:true, rows:[["W",5],["P",4,2],["P",8,9],["P",12,11,10],["W",0],["P",1,3]],
+    captions:{1:"<em>Midnight</em> &middot; Off-Broadway Opening Night",
+              3:"<em>Moulin Rouge! National Tour</em> &middot; Opening Night<span class=\"cm\">,</span> <span class=\"nw ln2\">Los Angeles, Monterrey MX</span>",
+              5:"<em>Midnight</em> &middot; Off-Broadway Opening Night"},   // shown under that row (row numbers count from 0)
+    photos:[
     {src:"media/img/df7c9f589bc1.webp",w:1200,h:800,alt:"Four guests in black and white formalwear posing together"},
     {src:"media/img/892aa70fc098.webp",w:600,h:900,alt:"Black and white silhouette of a woman applying makeup by a mirror"},
     {src:"media/img/d09e33e4874d.webp",w:600,h:900,alt:"Profile portrait of a woman with braids and a sculptural silver earring"},
@@ -525,8 +566,8 @@ function frame(p, i, cls=""){
 const total = p => p.photos.filter(x=>!x.hidden).length || p.count;   // hidden photos (kept only for the landing slideshow) are not counted
 /* galleries folded into another page show up as sections of it */
 const GROUPS = { theatrical:[
-  {slug:"theatrical",   label:"Live Performance"},
-  {slug:"moulin-rouge", label:"Moulin Rouge!"}
+  {slug:"theatrical",   label:"Live Performance", credit:{title:"Pairings", by:"Ben Green x Creams", venue:"La MaMa Experimental Theatre Club"}},
+  {slug:"moulin-rouge", label:"Moulin Rouge!", credit:{items:[["Directed","Alex Timbers"],["Choreographed","Sonya Tayeh"],["Costumes","Catherine Zuber"]]}}
 ] };
 const P = slug => PROJECTS.find(q=>q.slug===slug);
 const LISTED = PROJECTS.filter(q=>!q.within);
@@ -637,6 +678,16 @@ function restart(){
 }
 
 /* ---------- project ---------- */
+/* the flipbook's "Go on, turn a page." uses exactly the same type as the photo credits on this page
+   (the site fine-tunes its Helvetica size and spacing, so those settings are copied into the flipbook once it loads) */
+function matchLookbookType(f){
+  try{
+    const h=f.contentDocument && f.contentDocument.getElementById("hint"); if(!h) return;
+    const ref=document.querySelector(".sec-credit"); if(!ref) return;
+    const cs=getComputedStyle(ref);
+    ["fontFamily","fontSize","fontSizeAdjust","letterSpacing","lineHeight"].forEach(k=>{ h.style[k]=cs[k]; });
+  }catch(e){}
+}
 function fitLookbook(){
   const f=document.getElementById("lbk"); if(!f) return;
   const w=f.clientWidth, maxH=Math.round(innerHeight*0.8)+82;
@@ -646,14 +697,19 @@ function fitLookbook(){
 addEventListener("resize",fitLookbook);
 function realInner(p){
   const ph=p.photos, img=i=>`<img src="${ph[i].src}" alt="${ph[i].alt}" data-i="${i}" loading="lazy">`;
-  const html=p.rows.map(r=>{
+  const html=p.rows.map((r,n)=>{
     const [k,a]=r, ar=i=>`aspect-ratio:${ph[i].w}/${ph[i].h}`;
-    if(k==="P"){ const ids=r.slice(1);   // two or three photos side by side, all the same height
-      return `<div class="rp" style="grid-template-columns:${ids.map(i=>(ph[i].w/ph[i].h).toFixed(4)+"fr").join(" ")}">`+
-        ids.map(i=>`<figure style="${ar(i)}">${img(i)}</figure>`).join("")+`</div>`; }
-    if(k==="F") return `<figure class="rf" style="${ar(a)}">${img(a)}</figure>`;   // full-bleed, edge to edge
-    return `<figure class="rw" style="${ar(a)}">${img(a)}</figure>`;   // wide, within the page margins
+    const blk = (p.gapless && n>0 && n%2===0) ? " blk" : "";   // gapless galleries: rows come in pairs, each pair starts a new block
+    const cap = p.captions && p.captions[n] ? `<p class="sec-credit row-credit">${p.captions[n]}</p>` : "";
+    return rowHTML(k,a,r,ar,blk) + cap;
   });
+  function rowHTML(k,a,r,ar,blk){
+    if(k==="P"){ const ids=r.slice(1);   // two or three photos side by side, all the same height
+      return `<div class="rp${blk}" style="grid-template-columns:${ids.map(i=>(ph[i].w/ph[i].h).toFixed(4)+"fr").join(" ")}">`+
+        ids.map(i=>`<figure style="${ar(i)}">${img(i)}</figure>`).join("")+`</div>`; }
+    if(k==="F") return `<figure class="rf${blk}" style="${ar(a)}">${img(a)}</figure>`;   // full-bleed, edge to edge
+    return `<figure class="rw${blk}" style="${ar(a)}">${img(a)}</figure>`;   // wide, within the page margins
+  }
   if(p.lookbook && p.bookAfter!=null)   // the book sits between rows of photos
     html.splice(p.bookAfter,0,`</div><div class="lookbook mid"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div><div class="reel real">`);
   return html.join("");
@@ -702,6 +758,9 @@ function renderGroup(g, focus){
         <h2 class="sec-rule"><span>${s.label}</span></h2>
         ${q.lookbook && q.bookAfter==null?`<div class="lookbook"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div>`:""}
         ${inner}
+        ${s.credit?`<p class="sec-credit">${s.credit.items
+          ? s.credit.items.map(([role,name])=>`<span class="nw ci">${role} by <em>${name}</em>.</span>`).join(" ")
+          : `<em>${s.credit.title}</em>: ${s.credit.by}${s.credit.venue?` <span class="nw">@ ${s.credit.venue}</span>`:""}`}</p>`:""}
       </section>`;
   }).join("");
   view.innerHTML = `
@@ -751,7 +810,7 @@ function renderFilm(p, nxt){
 }
 /* Portraits: fixed order and magazine rhythm (from the gallery data); photos rise into place as you scroll */
 /* Portraits: the person in each photo, in gallery order (shown under each photo) */
-const PORTRAIT_NAMES = ["Tade Biesinger", "Ina Black", "Deanna Cudjoe", "Jordan Wayne", "Steve Bang", "Ronnie S. Bowman Jr.", "Bianca Rivera-Irions", "Emry Wride", "Tade Biesinger", "Katie Lombardo"];
+const PORTRAIT_NAMES = ["Tade Biesinger", "Ina Black", "Deanna Cudjoe", "Jordan Wayne", "Steve Bangerter", "Ronnie S. Bowman Jr.", "Bianca Rivera-Irions", "Emry Wride", "Tade Biesinger", "Katie Lombardo"];
 function renderPortraits(p, nxt){
   const ph=p.photos, PT_SLOTS=p.layout||[];
   const fig=(x,i,cls)=>`<figure class="pt-f ${cls}" style="aspect-ratio:${x.w}/${x.h}"><img src="${x.src}" alt="${x.alt}" data-i="${i}" ${i>1?'loading="lazy"':''}><figcaption>${PORTRAIT_NAMES[i] || ""}</figcaption></figure>`;
@@ -818,10 +877,12 @@ const LOGOS = {
 const REEL_POSTER = "media/img/cover-onstage-reel.jpg";
 let _reel=null;
 function reelURL(){ return "media/video/onstage-reel.mp4"; }
+/* caption shown under a photo when it's opened in the viewer */
+const MR_TOUR_CAP = "<em>Moulin Rouge! National Tour</em><span>Photographed by Avery Brunkus</span>";
 const STILLS = [
   {c:"open",alt:"Full company dancing in front of an onstage band",src:"media/img/040dfef0295a.webp"},
-  {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",src:"media/img/490b3fb9fa70.webp"},
-  {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",src:"media/img/2fe8c841dbab.webp"},
+  {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",cap:MR_TOUR_CAP,src:"media/img/490b3fb9fa70.webp"},
+  {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",cap:MR_TOUR_CAP,src:"media/img/2fe8c841dbab.webp"},
   {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",src:"media/img/71f095b95294.jpg"},
   {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",src:"media/img/e02c559f1cbf.jpg"},
   {c:"tall",alt:"Luke in costume onstage in front of a snowy cityscape backdrop",src:"media/img/e2937aa09941.jpg"},
@@ -847,19 +908,27 @@ function renderStage(){
   const v=$("#reel"), b=$("#sound");
   v.addEventListener("loadedmetadata", placeSound);
   placeSound();
+  view.querySelectorAll(".logos img, .tri img").forEach(im=>{ if(!im.complete) im.addEventListener("load", sliceLogos); });
+  sliceLogos(); requestAnimationFrame(sliceLogos);
+  // re-check the bottom fade whenever the page's height settles (logos and photos loading in)
+  if(window.ResizeObserver) new ResizeObserver(()=>heroFx()).observe(view.querySelector(".stage"));
   v.src = reelURL();
   v.play().catch(()=>{});
   heroFx();
   // the bouncing arrow glides the page down until the show logos are rising into view
   $("#scrollCue").onclick=e=>{ e.stopPropagation();
     const lg=document.querySelector(".logos"); if(!lg) return;
-    const to=Math.max(0, lg.getBoundingClientRect().top + scrollY - innerHeight*0.42);
+    // stop where the Mrs. Doubtfire logo (third in the list) is cut in half by the bottom of the screen, so it's clear there's more below
+    const df=lg.querySelector("li:nth-child(3) img"), r=df && df.getBoundingClientRect();
+    const to = (r && r.height)
+      ? Math.max(0, r.top + scrollY + r.height/2 - innerHeight)
+      : Math.max(0, lg.getBoundingClientRect().top + scrollY - innerHeight*0.42);
     glideTo(to, 1400);
   };
   b.onclick=e=>{ e.stopPropagation(); v.muted=!v.muted; if(!v.muted) v.play().catch(()=>{}); b.textContent=v.muted?"Sound on":"Sound off"; b.setAttribute("aria-pressed",String(!v.muted)); };
   // tapping the video shows a brief "Scroll" in the middle of the screen
-  const hint=$("#tapHint"); let hintT=0;
-  v.onclick=()=>{ hint.classList.add("show"); clearTimeout(hintT); hintT=setTimeout(()=>hint.classList.remove("show"), 2000); };
+  // desktop: clicking the reel glides down to the show logos, same as the arrow
+  v.onclick=()=>{ if(!STAGE_MOBILE.matches) $("#scrollCue").click(); };
   scrollTo(0,0);
 }
 
@@ -870,8 +939,8 @@ function aboutHTML(){
       <div class="ph portrait"><img src="media/img/6ac10dd9b574.webp" alt="Portrait of Luke Rands"></div>
       <p>I discovered dance in the suburbs of Chicago after a long bout with every sport under the sun. I knew every word to the <em>Wicked</em> soundtrack, and triumphantly gave my parents the silent treatment when they went to see the show without me. A few years later, when I was finally old enough to go, I sat in the back row of the balcony and knew that’s what I was meant to do with my life.</p>
       <p>That feeling took me to a dance studio in a strip mall, to Brigham Young University to study Musical Theatre, pervaded through a mission in Thailand, and brought me to New York City. I’ve done jobs I’m proud to have on my resume, but some of my favorite theatrical memories are the one-night-only concerts and the late-night kitchen rehearsals with best friends I'd met just weeks prior.</p>
-      <p>It was on tour with <em>Moulin Rouge!</em> that I picked up a camera for the first time since high school. As a dancer, the show was physically taxing, and I needed a creative outlet that wasn’t a Christina Aguilera or Katy Perry song- so I found film. I learned how to shoot, and I fell in love with capturing our lives on the road. It reminded me of just how special our ‘mundane’ really was.</p>
-      <p>Performing and photography feel similar to the magic I felt while catching lightning bugs in mason jars as a little boy. As an actor, I’d like to think that if I were a lightning bug, I’d be so happy knowing my light brought someone else joy. But as a photographer, I get to hold up the jar and experience the glow, capturing the beauty I see in every person and production. Whether I’m on stage or behind the lens, I’m here to catch the light.</p>
+      <p>It was on tour with <em>Moulin Rouge!</em> that I picked up a camera for the first time since high school. As a dancer, the show was physically taxing, and I needed a creative outlet that wasn’t throwing women in the air- so I found film. I learned how to shoot, and I fell in love with capturing our lives on the road. It reminded me of just how special our ‘mundane’ really was.</p>
+      <p>Performing and photography feel similar to the magic I felt while catching lightning bugs in mason jars as a little boy. As an actor, I’d like to think that if I were a lightning bug, I’d be so happy knowing my light brought someone else joy. But as a photographer, I get to hold up the jar and experience the glow, capturing the beauty I see in every person and production. Both are important to me. Both share a purpose in light.</p>
     </article>`;
 }
 function renderAbout(){
@@ -885,6 +954,8 @@ function lbShow(i){
   lbI=(i+lbList.length)%lbList.length;
   const x=lbList[lbI], im=$("#lbImg");
   im.src=x.src; im.alt=x.alt;
+  $("#lbCap").innerHTML = x.cap || "";
+  $("#lb").classList.toggle("has-cap", !!x.cap);
   $("#lbCt").textContent=(lbI+1)+" / "+lbList.length;
 }
 function openLB(i,list){
@@ -938,7 +1009,7 @@ function glideTo(to, dur){
 const SOUND_MOBILE = matchMedia("(max-width:799px) and (orientation:portrait)");
 function placeSound(){
   const b=document.getElementById("sound"), v=document.getElementById("reel"); if(!b || !v) return;
-  if(!SOUND_MOBILE.matches){ b.style.top=""; b.style.bottom=""; return; }
+  if(!SOUND_MOBILE.matches || STAGE_MOBILE.matches){ b.style.top=""; b.style.bottom=""; return; }   // phones: CSS puts it just under the reel
   const vw=v.videoWidth||16, vh=v.videoHeight||9;
   const shown=Math.min(innerHeight, innerWidth*vh/vw) * 1.04;          // the reel is fitted to the width, then scaled up 4%
   const top=(innerHeight - shown)/2 - b.offsetHeight - 14;               // 14px above the picture
@@ -946,8 +1017,56 @@ function placeSound(){
 }
 addEventListener("resize", placeSound);
 try{ SOUND_MOBILE.addEventListener("change", placeSound); }catch(e){}
+/* phones: the reel scrolls away like the rest of the page, so the blur/fade effects are off */
+const STAGE_MOBILE = matchMedia("(max-width:799px)");
+try{ STAGE_MOBILE.addEventListener("change", ()=>{ heroFx(); placeSound(); sliceLogos(); }); }catch(e){}
+/* phones: nudge the logo list (by a few dozen px at most) so that, at the top of the page, the next logo after
+   Mrs. Doubtfire peeks up from the bottom fade: The Gilded Age's "HBO ORIGINAL" line shows crisply and its big
+   lettering sinks into the black, so it's obvious there's more below. On short phones where that can't be reached
+   with a small nudge, a big logo is set half into the fade instead */
+function sliceLogos(){
+  const L=document.querySelector(".stage .logos"), bar=document.querySelector(".bar.bottom");
+  if(!L || !bar) return;
+  if(!STAGE_MOBILE.matches){ L.style.removeProperty("--logo-shift"); L.style.removeProperty("--logo-gap"); return; }
+  if(scrollY>2) return;                                   // never move things while someone is reading
+  const curS=parseFloat(L.style.getPropertyValue("--logo-shift"))||0, curG=parseFloat(L.style.getPropertyValue("--logo-gap"))||0;
+  const barTop=bar.getBoundingClientRect().top;
+  const imgs=[...L.querySelectorAll("li img")];
+  const items=[];
+  for(let k=0;k<imgs.length;k++){
+    const r=imgs[k].getBoundingClientRect(); if(!r.height) return;   // wait until the logos have loaded
+    items.push({top:r.top-curS-k*curG, h:r.height, k});
+  }
+  // smallest nudge (space above the logos, and between them) that lands a point of the chosen logo(s) on the line
+  const search=(edge, pick, lo, hi, sMin, sMax, gMin, gMax)=>{
+    let best=null;
+    for(let s=sMin; s<=sMax; s+=2) for(let g=gMin; g<=gMax; g+=2){
+      const cost=Math.abs(s)+1.5*Math.abs(g); if(best && cost>=best.cost) continue;
+      if(items.filter(pick).some(it=>{ const f=(edge-(it.top+s+it.k*g))/it.h; return f>=lo && f<=hi; })) best={s,g,cost};
+    }
+    return best;
+  };
+  const last=items.length-1;
+  // 1st choice: the HBO line sits just above where the fade starts to darken, the big words just below it
+  let best=search(barTop-28, it=>it.k===last, 0.3, 0.5, -36, 56, -36, 28);
+  // short screens: a big logo half in, half out of the fade
+  if(!best) best=search(barTop-55, it=>it.k<last, 0.4, 0.6, -30, 56, -16, 28);
+  L.style.setProperty("--logo-shift", (best?best.s:0)+"px");
+  L.style.setProperty("--logo-gap", (best?best.g:0)+"px");
+}
+addEventListener("resize", ()=>{ if(scrollY<=2) sliceLogos(); });
 function heroFx(){
   const v=document.getElementById("reel"); if(!v) return;
+  if(STAGE_MOBILE.matches){
+    // the bottom fade fades itself out as the production photos come up from the bottom of the screen
+    const stl=document.querySelector(".stills");
+    if(stl){ const t=stl.getBoundingClientRect().top; document.body.style.setProperty("--stage-fade", Math.min(1, Math.max(0, (t-innerHeight)/120)).toFixed(2)); }
+    v.style.filter="";
+    const h=document.querySelector(".stage .hero"), sb=document.getElementById("sound");
+    if(h) h.style.opacity="";
+    if(sb){ sb.style.opacity=""; sb.style.pointerEvents=""; }
+    return;
+  }
   const p=Math.min(Math.max(scrollY/(innerHeight*0.7),0),1);
   v.style.filter=`blur(${(p*9).toFixed(1)}px) brightness(${(1-p*0.55).toFixed(2)})`;
   /* fade the reel out to plain black as the production stills arrive */
@@ -1054,7 +1173,7 @@ function renderRoute(h){
   view.textContent = "";
   scrollTo(0,0);
   let r = "home";
-  if(h.startsWith("p/")){ r="project"; renderProject(h.slice(2)); const f=document.getElementById("lbk"); if(f){ fitLookbook(); f.src="book.html"; } }
+  if(h.startsWith("p/")){ r="project"; renderProject(h.slice(2)); const f=document.getElementById("lbk"); if(f){ fitLookbook(); f.onload=()=>matchLookbookType(f); f.src="book.html"; } }
   else if(h==="about"){ r="about"; renderAbout(); }
   else if(h==="on-stage"){ r="stage"; renderStage(); }
   else if(h==="photography"){ renderHome(true); }
