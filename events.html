@@ -141,7 +141,7 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .sec-credit .nw{white-space:nowrap}
 /* a caption under a row of photos (Events): phones keep the page margin, desktop lines up with the photo column */
 .reel .row-credit{margin:12px 20px 0}
-@media (max-width:799px){ .row-credit .cm{display:none} .row-credit .ln2{display:block} }   /* phones: the place goes on its own line, without the comma */
+@media (max-width:799px){ .row-credit .cm{display:none} .sec-credit .ln2{display:block} }   /* phones: the place goes on its own line, without the comma */
 @media (min-width:800px){ .reel .row-credit{margin:12px 0 0;padding:0;max-width:none} }   /* on a narrow phone the venue drops to its own line in one piece */
 @media (min-width:800px){ .sec-credit{box-sizing:border-box;max-width:1100px;margin:12px auto 0;padding:0 36px} }   /* desktop: lines up with the left edge of the photo column */
 @media (max-width:520px){.film-cta{right:10px;bottom:10px;padding:7px 11px;font-size:13px}}
@@ -205,7 +205,8 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .sec-rule{display:flex;align-items:center;gap:14px;flex-direction:row-reverse;margin:40px 20px 30px;font:400 12px/1 var(--sans);letter-spacing:.06em;color:var(--muted);opacity:.7}
 .sec-rule::after{content:"";flex:1;height:1px;background:currentColor;opacity:.3}
 .project .meta + .sec .sec-rule{margin-top:-24px}
-.sec + .sec .sec-rule{margin-top:35px;margin-bottom:35px}   /* centered between the photos above and below */
+.sec + .sec .sec-rule{margin-top:35px;margin-bottom:35px}
+@media (max-width:799px){ .sec + .sec .sec-rule{margin-top:22px} }   /* phones: the next section line sits closer to the credit above it */   /* centered between the photos above and below */
 .sec .lookbook{margin-top:0}
 .sec .lookbook.mid{margin:-24px auto -14px;position:relative;z-index:0}
 .sec .reel{position:relative;z-index:1}
@@ -760,7 +761,7 @@ function renderGroup(g, focus){
         ${inner}
         ${s.credit?`<p class="sec-credit">${s.credit.items
           ? s.credit.items.map(([role,name])=>`<span class="nw ci">${role} by <em>${name}</em>.</span>`).join(" ")
-          : `<em>${s.credit.title}</em>: ${s.credit.by}${s.credit.venue?` <span class="nw">@ ${s.credit.venue}</span>`:""}`}</p>`:""}
+          : `<em>${s.credit.title}</em>: ${s.credit.by}${s.credit.venue?` <span class="nw ln2">@ ${s.credit.venue}</span>`:""}`}</p>`:""}
       </section>`;
   }).join("");
   view.innerHTML = `
@@ -880,17 +881,17 @@ function reelURL(){ return "media/video/onstage-reel.mp4"; }
 /* caption shown under a photo when it's opened in the viewer */
 const MR_TOUR_CAP = "<em>Moulin Rouge! National Tour</em><span>Photographed by Avery Brunkus</span>";
 const STILLS = [
-  {c:"open",alt:"Full company dancing in front of an onstage band",src:"media/img/040dfef0295a.webp"},
+  {c:"open",alt:"Full company dancing in front of an onstage band",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/040dfef0295a.webp"},
   {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",cap:MR_TOUR_CAP,src:"media/img/490b3fb9fa70.webp"},
   {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",cap:MR_TOUR_CAP,src:"media/img/2fe8c841dbab.webp"},
-  {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",src:"media/img/71f095b95294.jpg"},
-  {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",src:"media/img/e02c559f1cbf.jpg"},
+  {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",cap:"<em>The Drowsy Chaperone</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/71f095b95294.jpg"},
+  {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",cap:"<em>Kinky Boots</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/e02c559f1cbf.jpg"},
   {c:"tall",alt:"Luke in costume onstage in front of a snowy cityscape backdrop",src:"media/img/e2937aa09941.jpg"},
-  {c:"land",alt:"Luke in a vest and tie dancing beside a woman in red",src:"media/img/c6b0f5187890.webp"},
-  {c:"land",alt:"Three men in hockey jerseys lounging in a living room set",src:"media/img/57eda5c999e4.webp"},
-  {c:"street",alt:"Six dancers in newsboy costumes leaping down a cobblestone street, Luke in color among them",src:"media/img/cc611f37e80a.jpg"},
-  {c:"tall",alt:"Headshot of Luke Rands in a white tank top",src:"media/img/e1365b9ae29f.webp"},
-  {c:"tall",alt:"Black and white studio portrait of Luke dancing",src:"media/img/a0fd14e43376.webp"}
+  {c:"land",alt:"Luke in a vest and tie dancing beside a woman in red",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/c6b0f5187890.webp"},
+  {c:"land",alt:"Three men in hockey jerseys lounging in a living room set",cap:"<em>Escape to Margaritaville</em><span>North Shore Music Theatre</span><span>Photographed by David Costa Photography</span>",src:"media/img/57eda5c999e4.webp"},
+  {c:"street",alt:"Six dancers in newsboy costumes leaping down a cobblestone street, Luke in color among them",cap:"<em>Newsies</em><span>Music Theatre Wichita</span>",src:"media/img/cc611f37e80a.jpg"},
+  {c:"tall",alt:"Headshot of Luke Rands in a white tank top",cap:"Photographed by Jon Taylor",src:"media/img/e1365b9ae29f.webp"},
+  {c:"tall",alt:"Black and white studio portrait of Luke dancing",cap:"Photographed by James Jin",src:"media/img/a0fd14e43376.webp"}
 ];
 function renderStage(){
   view.innerHTML = `
