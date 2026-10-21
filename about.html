@@ -676,7 +676,7 @@ function show(i){
     const v=el.querySelector("video"); if(v){ if(on){ try{ v.currentTime=0; }catch(e){} const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{}); } else v.pause(); }
   });
   const sl = HOME_SLIDES[cur], sp = sl.p, p = groupOf(sp), cap = $("#cap");
-  if(cap){ cap.href = routeToPath("p/"+sp.slug); cap.dataset.route = "p/"+sp.slug; cap.innerHTML = sl.film!=null ? `${p.title} <span>(${FILMS.length} films)</span>` : `${p.title} <span>(${groupTotal(p)} images)</span>`; }
+  if(cap){ cap.href = routeToPath("p/"+sp.slug); cap.dataset.route = "p/"+sp.slug; cap.innerHTML = sl.film!=null ? `${p.title} <span>(${FILMS.length} films)</span>` : `${p.slug==="theatrical" ? "Theatre Photography" : p.title} <span>(${groupTotal(p)} images)</span>`;   /* front page only: the gallery itself stays "Theatre" */ }
 }
 function restart(){
   if(curRoute()==="photography"){ clearInterval(timer); return; }
