@@ -67,6 +67,7 @@ nav a[aria-current="true"]{border-bottom-color:currentColor}
 
 body[data-route="home"] .bar{color:#fff}
 body[data-route="stage"]{background:#000;color:#fff}
+body[data-route="home"]{background:#000}   /* home (and the splash in front of it) sit on black, so the phone's bars match */
 /* about: slate asphalt texture, tuned toward the navy of the portrait vest */
 /* texture at half strength: a 50% veil of its own average color */
 body[data-route="about"],.ap-panel{background-color:#33383f;background-image:linear-gradient(rgba(64,66,73,.5),rgba(64,66,73,.5)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E %3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .82 0 0 0 0 .82 0 0 0 0 .82 0 0 1.4 0 -.58'/%3E %3C/filter%3E %3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='21' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .05 0 0 0 0 .05 0 0 0 0 .06 0 0 -1.5 0 .95'/%3E %3C/filter%3E %3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.4' numOctaves='1' seed='3' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .92 0 0 0 0 .92 0 0 0 0 .9 0 0 12 0 -8.1'/%3E %3C/filter%3E %3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='.38'/%3E %3Crect width='100%25' height='100%25' filter='url(%23b)' opacity='.42'/%3E %3Crect width='100%25' height='100%25' filter='url(%23c)' opacity='.14'/%3E %3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000'%3E %3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.006' numOctaves='4' seed='11' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .65 0 0 0 0 .65 0 0 0 0 .65 0 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .02 .13 .3'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Cfilter id='d' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='4' seed='29' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .04 0 0 0 0 .04 0 0 0 0 .045 1 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .04 .24 .5'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Cfilter id='e' x='0' y='0' width='100%25' height='100%25'%3E %3CfeTurbulence type='fractalNoise' baseFrequency='.028' numOctaves='3' seed='5' stitchTiles='stitch'/%3E %3CfeColorMatrix type='matrix' values='0 0 0 0 .02 0 0 0 0 .02 0 0 0 0 .03 1 0 0 0 0'/%3E %3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 .1 .3'/%3E%3C/feComponentTransfer%3E %3C/filter%3E %3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E %3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E %3Crect width='100%25' height='100%25' filter='url(%23e)'/%3E %3C/svg%3E");background-size:auto,320px 320px,1000px 1000px;color:#fff}
@@ -254,6 +255,7 @@ article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(44px,14vw,96px) *
 
 /* ---------- on stage ---------- */
 .stage{padding:0 0 150px}
+@media (max-width:799px){ .stage{padding-bottom:calc(98px + env(safe-area-inset-bottom,0px))} }   /* phones: at the very end the last photos sit just above Instagram / Contact me */
 .stage .hero{position:fixed;inset:0;z-index:0;margin:0;background:#000;overflow:hidden}
 .stage .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);will-change:filter}
 @media (orientation:portrait){.stage .hero video{object-fit:contain}}
@@ -290,7 +292,7 @@ article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(44px,14vw,96px) *
   .stage .hero video{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;transform:none}
   .hero-space,.scroll-cue,.tap-hint{display:none}
   .sound{position:static;display:block;width:fit-content;margin:10px 20px 0 auto}
-  .logos{margin-top:calc(44px + var(--logo-shift,0px));gap:calc(56px + var(--logo-gap,0px))}   /* nudged by sliceLogos() so a logo is always cut by the footer's top edge */
+  .logos{margin-top:44px;gap:40px}   /* fixed spacing: the same on every phone */
   .logos img{width:min(85%,400px);max-height:110px}
   .logos li:last-child{padding-top:18px}   /* a little less room above The Gilded Age so it can peek up from the bottom */
   /* bottom of the screen: no hard edge; the logos fade softly into black behind Instagram / Contact me.
@@ -299,7 +301,6 @@ article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(44px,14vw,96px) *
     background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 30%, rgba(0,0,0,.75) 55%, #000 78%);
     opacity:var(--stage-fade,1)}
 }
-@media (max-width:799px) and (max-height:799px){ .logos li:not(:last-child) img{max-height:82px} }   /* shorter phones: the three show logos a touch smaller so The Gilded Age can still peek up */
 @media (min-width:800px){ .stage .hero video{cursor:pointer} }   /* desktop: the reel is clickable */
 .tri{list-style:none;width:calc(100% - 40px);margin:0 auto 36px;padding:0;justify-items:center;display:grid;grid-template-columns:1fr 1fr;gap:32px 28px;max-width:560px;align-items:center}
 .tri li{display:flex;justify-content:center}
@@ -343,13 +344,17 @@ nav{transition:opacity .3s ease}
 html.ap-lock nav{opacity:0;pointer-events:none}
 @media (prefers-reduced-motion: reduce){ .ap-dim,.ap-panel,.ap-close{transition:none} }
 .about{padding:calc(120px + env(safe-area-inset-top,0px)) 20px 150px;max-width:720px;margin:0 auto;text-align:center}
+@media (max-width:799px){ .about{padding-top:calc(115px + env(safe-area-inset-top,0px));padding-bottom:calc(108px + env(safe-area-inset-bottom,0px))} }   /* phones: 5px less above; at the very bottom the text ends just above Contact me */
 .about p{max-width:36em;margin:0 auto 18px}
 .portrait{width:min(300px,70%);aspect-ratio:1192/1584;box-shadow:0 12px 30px rgba(0,0,0,.25);margin:0 auto 40px;display:block}
+.portrait img{top:-5px;height:calc(100% + 5px)}   /* the top 5px of the headshot is cropped off */
 
 /* ---------- lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;
   padding:calc(56px + env(safe-area-inset-top,0px)) 12px calc(56px + env(safe-area-inset-bottom,0px))}
 .lb.open{display:flex}
+.lb{touch-action:none}   /* pinch-zoom happens on the photo, not the page */
+.lb img{transform-origin:50% 50%}
 /* photo credit under the picture in the viewer (only for photos that have one) */
 .lb{flex-direction:column}
 .lb .cap{display:none;margin:14px 0 0;text-align:center;color:rgba(255,255,255,.82);font-size:14px;line-height:1.5}
@@ -368,13 +373,16 @@ html.ap-lock nav{opacity:0;pointer-events:none}
 .home.cur-l{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M25 16H7M13 10l-6 6 6 6' fill='none' stroke='%23fff' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, w-resize}
 .home.cur-r{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M7 16h18M19 10l6 6-6 6' fill='none' stroke='%23fff' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, e-resize}
 /* ---------- splash ---------- */
-.splash{position:fixed;inset:0;z-index:50;background:#111 url("media/img/cover-splash.jpg") 10% 0%/cover no-repeat;color:#fff;display:grid;place-items:center;cursor:pointer;overflow:hidden;transition:opacity .7s ease}
+.splash{position:fixed;inset:0;z-index:50;background:#000;color:#fff;display:grid;place-items:center;cursor:pointer;overflow:hidden;transition:opacity .7s ease}
 .splash:focus{outline:none}
 .splash-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:10% 0%}
 
 .splash h1{z-index:1}
 @keyframes hint{to{opacity:.9}}
 .splash.gone{opacity:0;pointer-events:none}
+/* until the moving picture is ready at its proper size, only the name shows, on black (no zoomed-in flash) */
+.splash .splash-vid,.splash .s8row{transition:opacity .45s ease}
+.splash:not(.ready) .splash-vid,.splash:not(.ready) .s8row{opacity:0 !important}
 .splash h1{position:relative;width:min(78vw,620px);aspect-ratio:900/628;margin:0}
 /* signature splash: shown in full from the first frame */
 .splash h1 i{position:absolute;inset:0;background:#fff}
@@ -510,7 +518,7 @@ const PROJECTS = [
     {src:"media/img/66f0655fff87.webp",w:800,h:1200,alt:"Dancer in a cap kneeling and drinking from a water bottle under teal light"},
     {src:"media/img/c78949a34dc5.webp",w:1400,h:933,alt:"Dancer reaching toward a glowing curtain on a dark stage"},
     {src:"media/img/d619d0462e70.webp",w:1400,h:933,alt:"Dancer in white crouching low with a fan prop"},
-    {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"}
+    {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,pos:"100% 50%",alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"}
   ] },
   { slug:"moulin-rouge", within:"theatrical", title:"Moulin Rouge!", count:2, hue:350, lookbook:true, rows:[["F",0],["F",1]], bookAfter:1, photos:[
     {src:"media/img/2be709789a0c.webp",w:2178,h:1444,alt:"Two performers kissing beside a bentwood chair in stage haze, seen from the wings"},
@@ -561,7 +569,7 @@ function grad(hue, i){
 function frame(p, i, cls=""){
   const ph = p.photos[i], src = ph && (typeof ph==="string" ? ph : ph.src);
   const label = src ? "" : `<span class="tag">${p.title}, photo ${i+1}</span>`;
-  const img = src ? `<img src="${src}" alt="${(ph && ph.alt) || (p.title + ', photo ' + (i+1))}" loading="lazy">` : "";
+  const img = src ? `<img src="${src}" alt="${(ph && ph.alt) || (p.title + ', photo ' + (i+1))}" loading="lazy"${ph && ph.pos ? ` style="object-position:${ph.pos}"` : ""}>` : "";   // pos: which part of a cropped photo to keep in view
   return `<div class="ph ${cls}" style="--g:${grad(p.hue,i)}">${img}${label}</div>`;
 }
 const total = p => p.photos.filter(x=>!x.hidden).length || p.count;   // hidden photos (kept only for the landing slideshow) are not counted
@@ -909,8 +917,6 @@ function renderStage(){
   const v=$("#reel"), b=$("#sound");
   v.addEventListener("loadedmetadata", placeSound);
   placeSound();
-  view.querySelectorAll(".logos img, .tri img").forEach(im=>{ if(!im.complete) im.addEventListener("load", sliceLogos); });
-  sliceLogos(); requestAnimationFrame(sliceLogos);
   // re-check the bottom fade whenever the page's height settles (logos and photos loading in)
   if(window.ResizeObserver) new ResizeObserver(()=>heroFx()).observe(view.querySelector(".stage"));
   v.src = reelURL();
@@ -952,6 +958,7 @@ function renderAbout(){
 /* ---------- lightbox ---------- */
 let lbI=0, lbFrom=null, lbList=[];
 function lbShow(i){
+  lbZoomReset(false);   // every photo opens un-zoomed
   lbI=(i+lbList.length)%lbList.length;
   const x=lbList[lbI], im=$("#lbImg");
   im.src=x.src; im.alt=x.alt;
@@ -978,17 +985,49 @@ addEventListener("keydown",e=>{
   else if(e.key==="ArrowLeft") lbShow(lbI-1);
   else if(e.key==="ArrowRight") lbShow(lbI+1);
 });
-(()=>{ let x0=null, multi=false; const lb=$("#lb");
-  // a swipe changes photo only when it is a single finger on an un-zoomed screen;
-  // pinching (two fingers) and panning around a zoomed-in photo never change it
-  lb.addEventListener("touchstart",e=>{ if(e.touches.length>1){ multi=true; x0=null; return; } if(!multi) x0=e.touches[0].clientX; },{passive:true});
-  lb.addEventListener("touchend",e=>{ if(e.touches.length) return;   // wait until every finger is lifted
-    const skip = multi || x0===null || lbZoomed(); multi=false;
-    if(!skip){ const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40) lbShow(lbI+(dx<0?1:-1)); }
-    x0=null; },{passive:true});
-  lb.addEventListener("touchcancel",()=>{ x0=null; multi=false; },{passive:true});
+/* photo viewer zoom: pinching and dragging move the photo itself, while the page underneath never zooms.
+   (When the whole page was zoomed, iPhone Safari let the photo jump and flicker across the screen while zooming back out.) */
+const lbZ = {s:1, x:0, y:0};
+function lbApply(anim){ const im=$("#lbImg"); im.style.transition = anim ? "transform .25s ease" : "none";
+  im.style.transform = lbZ.s>1.001 ? `translate(${lbZ.x}px,${lbZ.y}px) scale(${lbZ.s})` : ""; }
+function lbZoomReset(anim){ lbZ.s=1; lbZ.x=0; lbZ.y=0; lbApply(anim); }
+function lbZoomed(){ return lbZ.s > 1.01; }
+function lbClamp(){   // the zoomed photo can be dragged to its edges, but never off them
+  const im=$("#lbImg"), w=im.offsetWidth, h=im.offsetHeight;
+  const mx=Math.max(0,(w*lbZ.s-w)/2), my=Math.max(0,(h*lbZ.s-h)/2);
+  lbZ.x=Math.min(mx,Math.max(-mx,lbZ.x)); lbZ.y=Math.min(my,Math.max(-my,lbZ.y));
+}
+(()=>{ const lb=$("#lb"), im=$("#lbImg");
+  let mode=null, d0=0, s0=1, x0=0, y0=0, px=0, py=0, sx=null, multi=false;
+  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
+  const mid=t=>[(t[0].clientX+t[1].clientX)/2,(t[0].clientY+t[1].clientY)/2];
+  const centre=()=>{ const r=im.getBoundingClientRect(); return [r.left+r.width/2-lbZ.x, r.top+r.height/2-lbZ.y]; };   // where the photo's centre sits unzoomed
+  ["gesturestart","gesturechange","gestureend"].forEach(ev=>lb.addEventListener(ev,e=>e.preventDefault(),{passive:false}));   // iPhone: no page zoom in here
+  lb.addEventListener("touchstart",e=>{
+    if(e.touches.length===2){ multi=true; mode="pinch"; d0=dist(e.touches)||1; s0=lbZ.s; [px,py]=mid(e.touches); x0=lbZ.x; y0=lbZ.y; sx=null; return; }
+    if(e.touches.length===1){ px=e.touches[0].clientX; py=e.touches[0].clientY; x0=lbZ.x; y0=lbZ.y; mode=lbZoomed()?"pan":null; if(!multi) sx=px; }
+  },{passive:true});
+  lb.addEventListener("touchmove",e=>{
+    if(mode==="pinch" && e.touches.length===2){ e.preventDefault();
+      const [cx,cy]=centre(), [mx,my]=mid(e.touches), s=Math.min(4,Math.max(1,s0*dist(e.touches)/d0));
+      const ix=(px-cx-x0)/s0, iy=(py-cy-y0)/s0;   // the spot on the photo between the fingers stays between the fingers
+      lbZ.s=s; lbZ.x=mx-cx-ix*s; lbZ.y=my-cy-iy*s; lbClamp(); lbApply(false);
+    } else if(mode==="pan" && e.touches.length===1){ e.preventDefault();
+      lbZ.x=x0+e.touches[0].clientX-px; lbZ.y=y0+e.touches[0].clientY-py; lbClamp(); lbApply(false);
+    } else e.preventDefault();   // nothing behind the photo scrolls or bounces
+  },{passive:false});
+  lb.addEventListener("touchend",e=>{
+    if(e.touches.length===1){ px=e.touches[0].clientX; py=e.touches[0].clientY; x0=lbZ.x; y0=lbZ.y; mode=lbZoomed()?"pan":null; return; }   // one finger lifted mid-pinch: keep dragging
+    if(e.touches.length) return;
+    if(lbZ.s<1.05 && lbZ.s!==1) lbZoomReset(true);   // pinched (almost) all the way out: settle back neatly
+    const t=e.changedTouches[0], wasMulti=multi, wasPan=mode==="pan";
+    multi=false; mode=null;
+    // a one-finger swipe on an un-zoomed photo changes photo; pinches and drags never do
+    if(!wasMulti && !wasPan && sx!==null && !lbZoomed()){ const dx=t.clientX-sx; if(Math.abs(dx)>40) lbShow(lbI+(dx<0?1:-1)); }
+    sx=null;
+  },{passive:true});
+  lb.addEventListener("touchcancel",()=>{ mode=null; multi=false; sx=null; },{passive:true});
 })();
-function lbZoomed(){ return !!(window.visualViewport && visualViewport.scale > 1.01); }
 addEventListener("popstate",()=>{ if($("#lb").classList.contains("open")) closeLB(); });
 
 /* ---------- on stage: blur the reel as you scroll ---------- */
@@ -1020,42 +1059,7 @@ addEventListener("resize", placeSound);
 try{ SOUND_MOBILE.addEventListener("change", placeSound); }catch(e){}
 /* phones: the reel scrolls away like the rest of the page, so the blur/fade effects are off */
 const STAGE_MOBILE = matchMedia("(max-width:799px)");
-try{ STAGE_MOBILE.addEventListener("change", ()=>{ heroFx(); placeSound(); sliceLogos(); }); }catch(e){}
-/* phones: nudge the logo list (by a few dozen px at most) so that, at the top of the page, the next logo after
-   Mrs. Doubtfire peeks up from the bottom fade: The Gilded Age's "HBO ORIGINAL" line shows crisply and its big
-   lettering sinks into the black, so it's obvious there's more below. On short phones where that can't be reached
-   with a small nudge, a big logo is set half into the fade instead */
-function sliceLogos(){
-  const L=document.querySelector(".stage .logos"), bar=document.querySelector(".bar.bottom");
-  if(!L || !bar) return;
-  if(!STAGE_MOBILE.matches){ L.style.removeProperty("--logo-shift"); L.style.removeProperty("--logo-gap"); return; }
-  if(scrollY>2) return;                                   // never move things while someone is reading
-  const curS=parseFloat(L.style.getPropertyValue("--logo-shift"))||0, curG=parseFloat(L.style.getPropertyValue("--logo-gap"))||0;
-  const barTop=bar.getBoundingClientRect().top;
-  const imgs=[...L.querySelectorAll("li img")];
-  const items=[];
-  for(let k=0;k<imgs.length;k++){
-    const r=imgs[k].getBoundingClientRect(); if(!r.height) return;   // wait until the logos have loaded
-    items.push({top:r.top-curS-k*curG, h:r.height, k});
-  }
-  // smallest nudge (space above the logos, and between them) that lands a point of the chosen logo(s) on the line
-  const search=(edge, pick, lo, hi, sMin, sMax, gMin, gMax)=>{
-    let best=null;
-    for(let s=sMin; s<=sMax; s+=2) for(let g=gMin; g<=gMax; g+=2){
-      const cost=Math.abs(s)+1.5*Math.abs(g); if(best && cost>=best.cost) continue;
-      if(items.filter(pick).some(it=>{ const f=(edge-(it.top+s+it.k*g))/it.h; return f>=lo && f<=hi; })) best={s,g,cost};
-    }
-    return best;
-  };
-  const last=items.length-1;
-  // 1st choice: the HBO line sits just above where the fade starts to darken, the big words just below it
-  let best=search(barTop-28, it=>it.k===last, 0.3, 0.5, -36, 56, -36, 28);
-  // short screens: a big logo half in, half out of the fade
-  if(!best) best=search(barTop-55, it=>it.k<last, 0.4, 0.6, -30, 56, -16, 28);
-  L.style.setProperty("--logo-shift", (best?best.s:0)+"px");
-  L.style.setProperty("--logo-gap", (best?best.g:0)+"px");
-}
-addEventListener("resize", ()=>{ if(scrollY<=2) sliceLogos(); });
+try{ STAGE_MOBILE.addEventListener("change", ()=>{ heroFx(); placeSound(); }); }catch(e){}
 function heroFx(){
   const v=document.getElementById("reel"); if(!v) return;
   if(STAGE_MOBILE.matches){
@@ -1200,7 +1204,12 @@ function syncBar(){
   if(!c || c==="rgba(0, 0, 0, 0)" || c==="transparent") c = "#000000";
   const r = document.body.dataset.route;
   if(r==="home" || r==="stage") c = "#000000";      // full-bleed photo and video pages read best with a black bar
-  const m=document.getElementById("themeColor"); if(m && m.content!==c) m.content=c;
+  if(r==="about" && !splashUp) c = "#3a3d44";        // the About page's slate, as it actually looks (base colour under its veil)
+  // iPhone Safari tints its top and bottom bars from the page colour; it only re-reads that reliably when the colour
+  // tag is swapped for a fresh one and the page's own background changes too, so do both on every page change
+  html.style.backgroundColor = c;
+  const m=document.getElementById("themeColor");
+  if(m && m.content!==c){ const n=document.createElement("meta"); n.name="theme-color"; n.id="themeColor"; n.content=c; m.replaceWith(n); }
 }
 addEventListener("popstate", route);
 if(location.hash.startsWith("#/")) history.replaceState(null,"",routeToPath(location.hash.slice(2)));   // old #/ links still work
@@ -1221,6 +1230,9 @@ const Splash = (function(){
     name.insertAdjacentHTML("beforeend", '<i class="s1" aria-hidden="true"></i><i class="s2" aria-hidden="true"></i>');
     // silent background video
     v.muted=true; v.defaultMuted=true; v.loop=false; v.src="media/video/splash.mp4";
+    // phones: show the video only once its first frame is ready, already at the right size
+    const showMedia=()=>{ if(!S8.matches) s.classList.add("ready"); };
+    v.addEventListener("loadeddata", showMedia); v.addEventListener("playing", showMedia);
     // two plays, then the splash fades by itself
     v.addEventListener("ended", ()=>{ if(!open) return; plays++;
       if(plays>=2) leave(); else { try{ v.currentTime=0; }catch(e){} const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{}); } });
@@ -1259,6 +1271,8 @@ const Splash = (function(){
   function paintS8(){
     if(S8.matches && s8ctx.some(c=>!c.canvas.width)) sizeS8();   // size first, then draw
     if(S8.matches && v.readyState>=2) s8ctx.forEach(c=>coverDraw(c, v, v.videoWidth||540, v.videoHeight||960));
+    // desktop: show the film frames only once all three have their real size and a picture in them
+    if(S8.matches && v.readyState>=2 && s8ctx.length && s8ctx.every(c=>c.canvas.width)) s.classList.add("ready");
     s8raf=requestAnimationFrame(paintS8);
   }
 
