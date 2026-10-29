@@ -133,6 +133,13 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .film figcaption{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.5}
 .film figcaption em{color:var(--ink);font-style:italic}
 .film figcaption span{display:block}
+/* the two Flats + Heels clips under the book: side by side, touching; full width on phones, a centred pair on desktop */
+.book-vids{display:flex;gap:0;margin:-29px 0 32px}   /* phones: touching, edge to edge; snug under "Go on, turn a page."; more room before the next photo */
+/* when the book opens a section (nothing above it but the section line), pull it up past the empty top of its frame:
+   the pages then start 30px under the line, like the first photo of any other section */
+.sec .reel:empty + .lookbook.mid{margin-top:-70px}
+.book-vids video{flex:1 1 0;min-width:0;width:50%;aspect-ratio:576/1024;object-fit:cover;display:block;background:#000}
+@media (min-width:800px){ .book-vids{gap:22px;width:min(742px, calc(100% - 72px));margin:-43px auto 48px} }   /* desktop: the same gap as the photo pairs */
 /* a credit under a gallery section, styled like the film captions on the Video page */
 .sec-credit{margin:12px 20px 0;font-size:14px;color:#3a3d44;line-height:1.5;text-align:right}   /* the same slate as the Portraits names */
 .sec-credit em{color:inherit;font-style:italic}
@@ -142,12 +149,28 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .sec-credit .nw{white-space:nowrap}
 /* a caption under a row of photos (Events): phones keep the page margin, desktop lines up with the photo column */
 .reel .row-credit{margin:12px 20px 0}
+.reel:not(.gapless) > .row-credit:not(:last-child){margin-bottom:18px}   /* a credit in the middle of a section: a little room before the next piece */
+@media (min-width:800px){ .reel:not(.gapless) > .row-credit:not(:last-child){margin-bottom:26px} }
 @media (max-width:799px){ .row-credit .cm{display:none} .sec-credit .ln2{display:block} }   /* phones: the place goes on its own line, without the comma */
 @media (min-width:800px){ .reel .row-credit{margin:12px 0 0;padding:0;max-width:none} }   /* on a narrow phone the venue drops to its own line in one piece */
 @media (min-width:800px){ .sec-credit{box-sizing:border-box;max-width:1100px;margin:12px auto 0;padding:0 36px} }   /* desktop: lines up with the left edge of the photo column */
 @media (max-width:520px){.film-cta{right:10px;bottom:10px;padding:7px 11px;font-size:13px}}
 /* ---------- portraits ---------- */
 .pt-flow{display:flex;flex-direction:column;gap:56px;margin-top:8px}
+/* the large photo, with a smaller one lifted over its bottom-right corner (percent margins follow the width, so the overlap
+   keeps the same proportions on every screen) */
+.pt-duo{position:relative;margin:8px 0 0}
+.pt-duo figure{margin:0;aspect-ratio:2/3;overflow:hidden}
+.pt-duo img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.pt-duo .big{width:76%}   /* phones: from the left edge, leaving room on the right */
+.pt-duo .small{position:relative;z-index:1;width:44%;margin:-24% 20px 0 auto;box-shadow:0 14px 34px rgba(0,0,0,.18)}   /* overlaps the big photo's corner by about a third of its own height */
+.pt-duo + .pt-flow{margin-top:56px}
+@media (min-width:800px){
+  .pt-duo{width:min(860px, calc(100% - 220px));margin:8px auto 0}
+  .pt-duo .big{width:66%}
+  .pt-duo .small{width:40%;margin:-22% 6% 0 auto}   /* overlaps the corner about the same share as on phones */
+  .pt-duo + .pt-flow{margin-top:64px}
+}
 .pt-band{display:contents}
 .pt-flow{overflow-x:clip}   /* the slight zoom before each photo animates in must not cause sideways scrolling */
 .pt-f{position:relative;margin:0;overflow:visible}
@@ -514,17 +537,29 @@ html.booting,html.booting body{background:#000}
    - count: how many placeholder frames to show while photos is empty
    ============================================================ */
 const PROJECTS = [
-  { slug:"theatrical",   title:"Theatre",    count:4, hue:300, rows:[["F",1],["P",0,3],["F",2]], photos:[
+  { slug:"theatrical",   title:"Theatre",    count:8, hue:300, rows:[["F",1],["P",0,3],["F",2],["P",7,5],["P",6,4]],
+    captions:{2:'<em>Pairings</em>: Ben Green x Creams <span class="nw ln2">@ La MaMa Experimental Theatre Club</span>', 4:'Kyle Carr Scheurich: <em>true ribs, rawhide</em> <span class="nw ln2">@ Center for Performance Research in Brooklyn</span>'},   // credits under row 3 (Pairings) and row 5 (true ribs, rawhide)
+    photos:[
     {src:"media/img/66f0655fff87.webp",w:800,h:1200,alt:"Dancer in a cap kneeling and drinking from a water bottle under teal light"},
     {src:"media/img/c78949a34dc5.webp",w:1400,h:933,alt:"Dancer reaching toward a glowing curtain on a dark stage"},
     {src:"media/img/d619d0462e70.webp",w:1400,h:933,alt:"Dancer in white crouching low with a fan prop"},
-    {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,pos:"100% 50%",alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"}
+    {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,pos:"100% 50%",alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"},
+    {src:"media/img/theatre/true-ribs-fence-1400.webp",full:"media/img/theatre/true-ribs-fence.webp",w:1536,h:2048,alt:"Performer in a fringed raffia costume, arms raised behind orange safety fencing",home:false},
+    {src:"media/img/theatre/true-ribs-kick-1400.webp",full:"media/img/theatre/true-ribs-kick.webp",w:1366,h:2048,alt:"Performer in a fringed raffia costume kicking a bare leg beside draped orange fencing and green turf",home:false},
+    {src:"media/img/theatre/true-ribs-stool-1400.webp",full:"media/img/theatre/true-ribs-stool.webp",w:1366,h:2048,alt:"Performer in a fringed raffia costume beside a wooden stool on green turf, under a lighting grid",home:false},
+    {src:"media/img/theatre/true-ribs-blur-1400.webp",full:"media/img/theatre/true-ribs-blur.webp",w:1600,h:2400,alt:"Long-exposure blur of a performer in a fringed raffia costume moving across green turf",home:false}
   ] },
-  { slug:"moulin-rouge", within:"theatrical", title:"Moulin Rouge!", count:2, hue:350, lookbook:true, rows:[["F",0],["F",1]], bookAfter:1, photos:[
-    {src:"media/img/2be709789a0c.webp",w:2178,h:1444,alt:"Two performers kissing beside a bentwood chair in stage haze, seen from the wings"},
+  { slug:"moulin-rouge", within:"theatrical", title:"Moulin Rouge!", count:2, hue:350, lookbook:true, rows:[["F",1]], bookAfter:0,
+    bookVids:[{src:"media/video/flats-heels-2.mp4",poster:"media/img/flats-heels-2.jpg"},{src:"media/video/flats-heels-1.mp4?v=2",poster:"media/img/flats-heels-1.jpg?v=2"}],   // two silent clips side by side, under the book
+    photos:[
+    {src:"media/img/2be709789a0c.webp",w:2178,h:1444,alt:"Two performers kissing beside a bentwood chair in stage haze, seen from the wings",hidden:true}   /* off the gallery; still on the front-page slideshow */,
     {src:"media/img/3e5963f1f548.webp",w:2560,h:1706,alt:"Performer in a robe reading at a red-draped dressing table between two bulb-lit mirrors"}
   ] },
-  { slug:"portraits",    title:"Portraits",     count:10, hue:205, portraits:true, layout:["full","in-r","pair","pair","full","in-l","in-r","pair","pair","full"], bands:[2,3,2,3], photos:[
+  { slug:"portraits",    title:"Portraits",     count:10, hue:205, portraits:true, layout:["full","in-r","pair","pair","full","in-l","in-r","pair","pair","full"], bands:[2,3,2,3],
+    topGrid:[
+      {src:"media/img/portraits/red-jacket-900.webp",full:"media/img/portraits/red-jacket.webp",alt:"Woman in red sunglasses and a red belted dress, holding a red jacket aloft"},
+      {src:"media/img/portraits/red-chair-front-900.webp",full:"media/img/portraits/red-chair-front.webp",alt:"Woman in red sunglasses and red tights sitting forward in a black leather armchair"}],   // a large photo with a smaller one overlapping its bottom-right corner; not on the front page
+    photos:[
     {src:"media/img/825303fab6e2.webp",w:1920,h:2560,alt:"Collage of a dancer in a black tank top caught in dozens of silhouetted, mid-movement poses",hero:true},
     {src:"media/img/3980032841be.webp",w:1706,h:2560,alt:"Woman in pinstripe jeans lying on her side with one leg raised against a white backdrop"},
     {src:"media/img/effbdef0c733.webp",w:1536,h:2304,alt:"Woman in a white lace shirt tied at the waist, hand on hip, against a black backdrop"},
@@ -572,11 +607,11 @@ function frame(p, i, cls=""){
   const img = src ? `<img src="${src}" alt="${(ph && ph.alt) || (p.title + ', photo ' + (i+1))}" loading="lazy"${ph && ph.pos ? ` style="object-position:${ph.pos}"` : ""}>` : "";   // pos: which part of a cropped photo to keep in view
   return `<div class="ph ${cls}" style="--g:${grad(p.hue,i)}">${img}${label}</div>`;
 }
-const total = p => p.photos.filter(x=>!x.hidden).length || p.count;   // hidden photos (kept only for the landing slideshow) are not counted
+const total = p => (p.photos.filter(x=>!x.hidden).length + (p.topGrid ? p.topGrid.length : 0)) || p.count;   // hidden photos (kept only for the landing slideshow) are not counted
 /* galleries folded into another page show up as sections of it */
 const GROUPS = { theatrical:[
-  {slug:"theatrical",   label:"Live Performance", credit:{title:"Pairings", by:"Ben Green x Creams", venue:"La MaMa Experimental Theatre Club"}},
-  {slug:"moulin-rouge", label:"Moulin Rouge!", credit:{items:[["Directed","Alex Timbers"],["Choreographed","Sonya Tayeh"],["Costumes","Catherine Zuber"]]}}
+  {slug:"moulin-rouge", label:"Moulin Rouge!", credit:{items:[["Directed","Alex Timbers"],["Choreographed","Sonya Tayeh"],["Costumes","Catherine Zuber"]]}},
+  {slug:"theatrical",   label:"Live Performance"}   /* its credits sit under their own photos (captions) */
 ] };
 const P = slug => PROJECTS.find(q=>q.slug===slug);
 const LISTED = PROJECTS.filter(q=>!q.within);
@@ -599,7 +634,7 @@ const HOME_EXTRA = [
 /* gallery photos kept off the front page (they stay in their galleries) */
 const HOME_EXCLUDE = new Set(["Dancer in a cap kneeling and drinking from a water bottle under teal light", "Performer in a peach corset and wide brimmed hat backstage", "Performer in a tall red feather headdress looking back over her shoulder", "Collage of a dancer in a black tank top caught in dozens of silhouetted, mid-movement poses", "Woman in pinstripe jeans lying on her side with one leg raised against a white backdrop", "Performer in a black tank top leaning on a dressing-room counter, fist resting at his temple", "Dancer in a deep lunge with one arm reaching skyward between library bookshelves, tall windows behind him", "Profile portrait of a woman with braids and a sculptural silver earring", "Black and white silhouette of a woman applying makeup by a mirror", "Woman in a white satin dress looking back over her shoulder by a red wall", "Woman in a white satin dress raising a lace-gloved arm against a red wall", "Performer in a jeweled top hat under deep blue light", "Woman in a white satin dress and lace gloves biting a gloved finger", "Man with a dark mustache in an open pink satin shirt against a burnt-orange wall", "Performer in a robe reading at a red-draped dressing table between two bulb-lit mirrors", "Guest in sunglasses and a gray jacket on the Moulin Rouge! red carpet", "Woman in a plunging burgundy gown under warm marquee lights", "Woman in a beaded olive gown on the Hollywood Walk of Fame", "Man in a sleeveless black jacket and corset belt, posing at dusk", "Guest in a white shirt and patterned bow tie smiling at the Moulin Rouge! backdrop", "A guest in a black halter embracing a laughing woman in black lace and white satin"]);
 function homeSlides(){
-  const desk = HOME_DESK.matches, want = ph => !HOME_EXCLUDE.has(ph.alt) && (desk ? ph.w > ph.h : ph.h > ph.w);
+  const desk = HOME_DESK.matches, want = ph => !HOME_EXCLUDE.has(ph.alt) && ph.home!==false && (desk ? ph.w > ph.h : ph.h > ph.w);   // home:false keeps a photo off the front page
   const from = slug => { const p=P(slug); return p ? p.photos.map((ph,i)=>({p,i,ph})).filter(x=>want(x.ph)) : []; };
   const EXTRA_P = {slug:"theatrical", within:"theatrical", title:"Theatre", photos:HOME_EXTRA};
   const extra = HOME_EXTRA.map((ph,i)=>({p:EXTRA_P, i, ph})).filter(x=>want(x.ph));   // front-page-only photos
@@ -620,7 +655,7 @@ function homeSlides(){
 let HOME_SLIDES = [];   // filled in when the front page renders
 HOME_DESK.addEventListener("change", ()=>{ HOME_SLIDES = homeSlides(); cur = 0; if(rendered==="" || rendered==="photography") renderRoute(rendered); });
 const PHOTO_BG_DESK = "media/img/photography-desktop.webp";   // desktop: wide studio shot (phones keep PHOTO_BG)
-const PHOTO_BG = "media/img/d15fa3baacc1.webp";
+const PHOTO_BG = "media/img/photography-phone.webp";
 function renderHome(listing){
   HOME_SLIDES = homeSlides(); if(cur>=HOME_SLIDES.length) cur=0;
   view.innerHTML = `
@@ -719,8 +754,13 @@ function realInner(p){
     if(k==="F") return `<figure class="rf${blk}" style="${ar(a)}">${img(a)}</figure>`;   // full-bleed, edge to edge
     return `<figure class="rw${blk}" style="${ar(a)}">${img(a)}</figure>`;   // wide, within the page margins
   }
+  /* two silent, looping clips side by side, touching, edge to edge on phones */
+function bookVidsHTML(p){
+  if(!p.bookVids) return "";
+  return `<div class="book-vids">${p.bookVids.map(v=>`<video src="${v.src}"${v.poster?` poster="${v.poster}"`:""} muted autoplay loop playsinline preload="metadata" aria-hidden="true"></video>`).join("")}</div>`;
+}
   if(p.lookbook && p.bookAfter!=null)   // the book sits between rows of photos
-    html.splice(p.bookAfter,0,`</div><div class="lookbook mid"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div><div class="reel real">`);
+    html.splice(p.bookAfter,0,`</div><div class="lookbook mid"><iframe id="lbk" title="Flats + Heels backstage lookbook" allowfullscreen></iframe></div>${bookVidsHTML(p)}<div class="reel real">`);
   return html.join("");
 }
 function bindReal(root, ph){
@@ -836,10 +876,13 @@ function renderPortraits(p, nxt){
     <article class="project pt">
       <a class="back back-top" href="#/photography"><span aria-hidden="true">&#8592;</span> Back</a>
       <h1>${p.title}</h1>
+      ${p.topGrid ? `<div class="pt-duo">${p.topGrid.map((x,k)=>`<figure class="${k ? "small" : "big"}"><img src="${x.src}"${x.full?` srcset="${x.src} 900w, ${x.full} 2400w" sizes="(min-width:800px) 600px, 76vw"`:""} alt="${x.alt}" data-g="${k}"></figure>`).join("")}</div>` : ""}
       <div class="pt-flow">${html}</div>
       <div class="gal-nav">${prevLink(p)}<a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a></div>
     </article>`;
-  view.querySelectorAll(".pt img").forEach(im=>{
+  view.querySelectorAll(".pt-duo img").forEach(im=>{ const k=+im.dataset.g; im.tabIndex=0; im.setAttribute("role","button");
+    im.onclick=()=>openLB(k,p.topGrid); im.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openLB(k,p.topGrid);} }; });
+  view.querySelectorAll(".pt-flow img").forEach(im=>{
     const k=+im.dataset.i; im.tabIndex=0; im.setAttribute("role","button");
     im.onclick=()=>openLB(k,ph);
     im.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openLB(k,ph);} };
@@ -889,17 +932,17 @@ function reelURL(){ return "media/video/onstage-reel.mp4"; }
 /* caption shown under a photo when it's opened in the viewer */
 const MR_TOUR_CAP = "<em>Moulin Rouge! National Tour</em><span>Photographed by Avery Brunkus</span>";
 const STILLS = [
-  {c:"open",alt:"Full company dancing in front of an onstage band",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/040dfef0295a.webp"},
-  {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",cap:MR_TOUR_CAP,src:"media/img/490b3fb9fa70.webp"},
-  {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",cap:MR_TOUR_CAP,src:"media/img/2fe8c841dbab.webp"},
-  {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",cap:"<em>The Drowsy Chaperone</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/71f095b95294.jpg"},
-  {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",cap:"<em>Kinky Boots</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/e02c559f1cbf.jpg"},
-  {c:"tall",alt:"Luke in costume onstage in front of a snowy cityscape backdrop",src:"media/img/e2937aa09941.jpg"},
-  {c:"land",alt:"Luke in a vest and tie dancing beside a woman in red",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/c6b0f5187890.webp"},
+  {c:"open",alt:"Full company dancing in front of an onstage band",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/stage/bandstand-company-1200.webp",full:"media/img/stage/bandstand-company.webp"},
+  {c:"tall",alt:"Luke mid-dance in a gold top under red stage light",cap:MR_TOUR_CAP,src:"media/img/stage/moulin-rouge-gold-1200.webp",full:"media/img/stage/moulin-rouge-gold.webp"},
+  {c:"tall",alt:"Ensemble in black, lit from behind, seen from the wings",cap:MR_TOUR_CAP,src:"media/img/stage/moulin-rouge-wings-1200.webp",full:"media/img/stage/moulin-rouge-wings.webp"},
+  {c:"wide",alt:"Two dancers in aprons and chef hats leaping either side of a woman in blue satin",cap:"<em>The Drowsy Chaperone</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/stage/drowsy-chaperone-1200.webp",full:"media/img/stage/drowsy-chaperone.webp"},
+  {c:"tall",alt:"Performer in a Union Jack costume and tall blue hat, center stage",cap:"<em>Kinky Boots</em><span>Music Theatre Wichita</span><span>Photographed by Jerry Fritchman</span>",src:"media/img/stage/kinky-boots-1200.webp",full:"media/img/stage/kinky-boots.webp"},
+  {c:"tall",alt:"Luke in costume onstage in front of a snowy cityscape backdrop",src:"media/img/stage/anastasia-1200.webp",full:"media/img/stage/anastasia.webp"},
+  {c:"land",alt:"Luke in a vest and tie dancing beside a woman in red",cap:"<em>Bandstand</em><span>The Rev Theatre Co.</span><span>Photographed by Goat Factory Media</span>",src:"media/img/stage/bandstand-vest-1200.webp",full:"media/img/stage/bandstand-vest.webp"},
   {c:"land",alt:"Three men in hockey jerseys lounging in a living room set",cap:"<em>Escape to Margaritaville</em><span>North Shore Music Theatre</span><span>Photographed by David Costa Photography</span>",src:"media/img/57eda5c999e4.webp"},
   {c:"street",alt:"Six dancers in newsboy costumes leaping down a cobblestone street, Luke in color among them",cap:"<em>Newsies</em><span>Music Theatre Wichita</span>",src:"media/img/cc611f37e80a.jpg"},
-  {c:"tall",alt:"Headshot of Luke Rands in a white tank top",cap:"Photographed by Jon Taylor",src:"media/img/e1365b9ae29f.webp"},
-  {c:"tall",alt:"Black and white studio portrait of Luke dancing",cap:"Photographed by James Jin",src:"media/img/a0fd14e43376.webp"}
+  {c:"tall",alt:"Headshot of Luke Rands in a white tank top",cap:"Photographed by Jon Taylor",src:"media/img/stage/headshot-jon-taylor-1200.webp",full:"media/img/stage/headshot-jon-taylor.webp"},
+  {c:"tall",alt:"Black and white studio portrait of Luke dancing",cap:"Photographed by James Jin",src:"media/img/stage/studio-james-jin-1200.webp",full:"media/img/stage/studio-james-jin.webp"}
 ];
 function renderStage(){
   view.innerHTML = `
@@ -907,7 +950,7 @@ function renderStage(){
       <div class="hero"><video id="reel" poster="${REEL_POSTER}" autoplay muted loop playsinline preload="auto" aria-label="Luke Rands dance reel"></video><button class="sound" id="sound" aria-pressed="false">Sound on</button><span class="tap-hint" id="tapHint" aria-hidden="true">Scroll</span><button class="scroll-cue" id="scrollCue" aria-label="Scroll down to the shows"><span class="cue-in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5l8 8 8-8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="square"/></svg></span></button></div><div class="hero-space"></div>
       <ul class="logos">${[LOGOS.shows[1],LOGOS.shows[2],LOGOS.shows[0],LOGOS.screen[0]].map(l=>`<li><img src="${l.src}" alt="${l.alt}"></li>`).join("")}</ul>
       <ul class="tri">${[LOGOS.theatres[0],LOGOS.theatres[2],LOGOS.theatres[1]].map(l=>`<li><img src="${l.src}" alt="${l.alt}"></li>`).join("")}</ul>
-      <div class="stills">${STILLS.map(x=>`<figure class="${x.c}" style="margin:0"><img src="${x.src}" alt="${x.alt}" loading="lazy"></figure>`).join("")}</div>
+      <div class="stills">${STILLS.map(x=>`<figure class="${x.c}" style="margin:0"><img src="${x.src}"${x.full ? ` srcset="${x.src} 1200w, ${x.full} 2400w" sizes="(min-width:800px) 60vw, 100vw"` : ""} alt="${x.alt}" loading="lazy"></figure>`).join("")}</div>
     </article>`;
   view.querySelectorAll(".stills img").forEach((im,i)=>{
     im.tabIndex=0; im.setAttribute("role","button");
@@ -961,7 +1004,7 @@ function lbShow(i){
   lbZoomReset(false);   // every photo opens un-zoomed
   lbI=(i+lbList.length)%lbList.length;
   const x=lbList[lbI], im=$("#lbImg");
-  im.src=x.src; im.alt=x.alt;
+  im.src=x.full||x.src; im.alt=x.alt;   // the viewer shows the full-size version when there is one
   $("#lbCap").innerHTML = x.cap || "";
   $("#lb").classList.toggle("has-cap", !!x.cap);
   $("#lbCt").textContent=(lbI+1)+" / "+lbList.length;
@@ -1178,7 +1221,7 @@ function renderRoute(h){
   view.textContent = "";
   scrollTo(0,0);
   let r = "home";
-  if(h.startsWith("p/")){ r="project"; renderProject(h.slice(2)); const f=document.getElementById("lbk"); if(f){ fitLookbook(); f.onload=()=>matchLookbookType(f); f.src="book.html"; } }
+  if(h.startsWith("p/")){ r="project"; renderProject(h.slice(2)); view.querySelectorAll(".book-vids video").forEach(v=>{ v.muted=true; v.defaultMuted=true; const q=v.play(); if(q&&q.catch) q.catch(()=>{}); });   /* silent clips start playing */ const f=document.getElementById("lbk"); if(f){ fitLookbook(); f.onload=()=>matchLookbookType(f); f.src="book.html"; } }
   else if(h==="about"){ r="about"; renderAbout(); }
   else if(h==="on-stage"){ r="stage"; renderStage(); }
   else if(h==="photography"){ renderHome(true); }
