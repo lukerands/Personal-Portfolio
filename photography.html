@@ -163,13 +163,27 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 .pt-duo figure{margin:0;aspect-ratio:2/3;overflow:hidden}
 .pt-duo img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
 .pt-duo .big{width:76%}   /* phones: from the left edge, leaving room on the right */
-.pt-duo .small{position:relative;z-index:1;width:44%;margin:-24% 20px 0 auto;box-shadow:0 14px 34px rgba(0,0,0,.18)}   /* overlaps the big photo's corner by about a third of its own height */
-.pt-duo + .pt-flow{margin-top:56px}
+.pt-duo .small{position:relative;z-index:1;width:44%;margin:-38.8% 0 0 auto;box-shadow:0 14px 34px rgba(0,0,0,.18)}   /* its top lines up with her knee in the large photo; flush with the right edge of the screen */
+.pt-duo .small figcaption{right:20px}   /* phones: her name keeps the page margin even though the photo runs to the edge */
+/* the second pair: the sideways chair photo tucked under the large one (beside the overlapping chair photo),
+   the reclining photo in the right-hand column beside it, just under her name */
+.pt-duo .big2{width:48%;margin-top:-21.2%}   /* phones: just under the large photo */
+.pt-duo .small2{position:relative;z-index:1;width:38%;margin:calc(-42.5% + 14px) 0 0 53%;box-shadow:0 14px 34px rgba(0,0,0,.18)}   /* in the right-hand column, beside the sideways chair photo, just under her name */
+/* her name under the forward-facing chair photo, bottom right, styled like the other portrait names */
+.pt-duo figure:has(figcaption){overflow:visible}
+.pt-duo figcaption{position:absolute;top:calc(100% + 7px);right:0;font-size:11px;letter-spacing:.08em;color:#3a3d44;white-space:nowrap}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .pt-duo figcaption{color:#8d93a0} }
+:root[data-theme="dark"] .pt-duo figcaption{color:#8d93a0}
+.pt-duo + .pt-flow{margin-top:32px}   /* the dancer collage follows a little closer */
 @media (min-width:800px){
   .pt-duo{width:min(860px, calc(100% - 220px));margin:8px auto 0}
   .pt-duo .big{width:66%}
-  .pt-duo .small{width:40%;margin:-22% 6% 0 auto}   /* overlaps the corner about the same share as on phones */
-  .pt-duo + .pt-flow{margin-top:64px}
+  .pt-duo .small{width:40%;margin:-33.7% 0 0 auto}   /* top in line with her knee, flush with the right edge of the gallery column */
+  .pt-duo .small figcaption{right:0}
+  .pt-duo .big2{width:44%;margin-top:-21.3%}
+  .pt-duo .small2{width:33%;margin:-38.3% 0 0 50%}
+  .pt-duo figcaption{font-size:12px}
+  .pt-duo + .pt-flow{margin-top:40px}
 }
 .pt-band{display:contents}
 .pt-flow{overflow-x:clip}   /* the slight zoom before each photo animates in must not cause sideways scrolling */
@@ -244,20 +258,20 @@ body[data-route="about"],.ap-panel{background-color:#33383f;background-image:lin
 /* top Back: transparent, outline only; scrolls away with the page.
    --cap is the gap between the top of the title's line and the top of its capital letters,
    so the box's top edge lines up with the top of the title lettering */
-.back-top{--cap:calc(clamp(44px,14vw,96px) * .14);display:flex;width:fit-content;position:relative;z-index:2;
+.back-top{--cap:calc(clamp(37px,11.45vw,79px) * .14);display:flex;width:fit-content;position:relative;z-index:2;
   margin:calc(-42px + var(--cap)) 20px calc(-35px - var(--cap))}
 @media (min-width:800px){ .back-top{margin:calc(-34px + var(--cap)) 36px calc(-35px - var(--cap))} }
 /* gallery titles: right-aligned on phones, centred on desktop; they share the top row with the Back button */
-article.project h1{font-size:clamp(44px,14vw,96px);text-align:right;margin-left:120px;margin-bottom:33px}   /* phones: a touch larger than before */
+article.project h1{font-size:clamp(37px,11.45vw,79px);text-align:right;margin-left:120px;margin-bottom:33px}   /* phones */
 @media (min-width:800px){ article.project h1{text-align:center;margin-left:160px;margin-right:160px;margin-bottom:36px} }
 /* Theatre: same gap from the bottom of the title lettering to the Live Performance line as from that line to the first photo (30px) */
-article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(44px,14vw,96px) * .13)}
+article.project h1:has(+ .sec){margin-bottom:calc(30px - clamp(37px,11.45vw,79px) * .13)}
 @media (max-width:799px){ article.project h1.nav-centred{text-align:center;margin-left:var(--nav-l,120px);margin-right:var(--nav-r,20px)} }
 /* desktop: the bottom of the title lettering lines up with the bottom of the Back box (86 + 35 = 121px),
-   and the photos start 48px below that; 76px type, capitals ≈ .714em tall starting .14em below the line top */
+   and the photos start 48px below that; 63px type, capitals ≈ .714em tall starting .14em below the line top */
 @media (min-width:800px){
   article.project{position:relative}
-  article.project h1{position:absolute;top:calc(121px - 76px * (.14 + .714));left:0;right:0;margin:0 160px;font-size:76px;text-align:center}
+  article.project h1{position:absolute;top:calc(121px - 63px * (.14 + .714));left:0;right:0;margin:0 160px;font-size:63px;text-align:center}
   .back-top{margin:-34px 36px 48px}
   article.project:not(:has(> .sec)) .back-top{margin-bottom:56px}   /* every gallery but Theatre: 8px more before the first photo */
 }
@@ -544,9 +558,9 @@ const PROJECTS = [
     {src:"media/img/c78949a34dc5.webp",w:1400,h:933,alt:"Dancer reaching toward a glowing curtain on a dark stage"},
     {src:"media/img/d619d0462e70.webp",w:1400,h:933,alt:"Dancer in white crouching low with a fan prop"},
     {src:"media/img/bb28a013ccbe.webp",w:800,h:1200,pos:"100% 50%",alt:"Black and white image of a dancer arching back on the floor beside a sheer curtain"},
-    {src:"media/img/theatre/true-ribs-fence-1400.webp",full:"media/img/theatre/true-ribs-fence.webp",w:1536,h:2048,alt:"Performer in a fringed raffia costume, arms raised behind orange safety fencing",home:false},
-    {src:"media/img/theatre/true-ribs-kick-1400.webp",full:"media/img/theatre/true-ribs-kick.webp",w:1366,h:2048,alt:"Performer in a fringed raffia costume kicking a bare leg beside draped orange fencing and green turf",home:false},
-    {src:"media/img/theatre/true-ribs-stool-1400.webp",full:"media/img/theatre/true-ribs-stool.webp",w:1366,h:2048,alt:"Performer in a fringed raffia costume beside a wooden stool on green turf, under a lighting grid",home:false},
+    {src:"media/img/theatre/true-ribs-fence-2x3-1400.webp",full:"media/img/theatre/true-ribs-fence-2x3.webp",w:1600,h:2400,alt:"Performer in a fringed raffia costume, arms raised behind orange safety fencing",home:false},
+    {src:"media/img/theatre/true-ribs-kick-1400.webp",full:"media/img/theatre/true-ribs-kick.webp",w:1600,h:2400,alt:"Performer in a fringed raffia costume kicking a bare leg beside draped orange fencing and green turf",home:false},
+    {src:"media/img/theatre/true-ribs-stool-1400.webp",full:"media/img/theatre/true-ribs-stool.webp",w:1600,h:2400,alt:"Performer in a fringed raffia costume beside a wooden stool on green turf, under a lighting grid",home:false},
     {src:"media/img/theatre/true-ribs-blur-1400.webp",full:"media/img/theatre/true-ribs-blur.webp",w:1600,h:2400,alt:"Long-exposure blur of a performer in a fringed raffia costume moving across green turf",home:false}
   ] },
   { slug:"moulin-rouge", within:"theatrical", title:"Moulin Rouge!", count:2, hue:350, lookbook:true, rows:[["F",1]], bookAfter:0,
@@ -558,7 +572,9 @@ const PROJECTS = [
   { slug:"portraits",    title:"Portraits",     count:10, hue:205, portraits:true, layout:["full","in-r","pair","pair","full","in-l","in-r","pair","pair","full"], bands:[2,3,2,3],
     topGrid:[
       {src:"media/img/portraits/red-jacket-900.webp",full:"media/img/portraits/red-jacket.webp",alt:"Woman in red sunglasses and a red belted dress, holding a red jacket aloft"},
-      {src:"media/img/portraits/red-chair-front-900.webp",full:"media/img/portraits/red-chair-front.webp",alt:"Woman in red sunglasses and red tights sitting forward in a black leather armchair"}],   // a large photo with a smaller one overlapping its bottom-right corner; not on the front page
+      {src:"media/img/portraits/red-chair-front-900.webp",full:"media/img/portraits/red-chair-front.webp",alt:"Woman in red sunglasses and red tights sitting forward in a black leather armchair",name:"Jerica Exum"},
+      {src:"media/img/portraits/red-chair-side-900.webp",full:"media/img/portraits/red-chair-side.webp",alt:"Woman in red lounging sideways in a black armchair, legs raised, sunglasses in hand"},
+      {src:"media/img/portraits/red-floor-900.webp",full:"media/img/portraits/red-floor.webp",alt:"Woman in a red dress reclining on a white floor, peering over red sunglasses"}],   // two diagonal pairs: a large photo with a smaller one over its corner, then the same a step smaller; not on the front page
     photos:[
     {src:"media/img/825303fab6e2.webp",w:1920,h:2560,alt:"Collage of a dancer in a black tank top caught in dozens of silhouetted, mid-movement poses",hero:true},
     {src:"media/img/3980032841be.webp",w:1706,h:2560,alt:"Woman in pinstripe jeans lying on her side with one leg raised against a white backdrop"},
@@ -815,7 +831,7 @@ function renderGroup(g, focus){
   view.innerHTML = `
     <article class="project">
       <a class="back back-top" href="#/photography"><span aria-hidden="true">&#8592;</span> Back</a>
-      <h1>${g.title}</h1>
+      <h1 class="nav-centred">${g.title}</h1>
       ${body}
       <div class="gal-nav">${prevLink(g)}<a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a></div>
     </article>`;
@@ -876,7 +892,7 @@ function renderPortraits(p, nxt){
     <article class="project pt">
       <a class="back back-top" href="#/photography"><span aria-hidden="true">&#8592;</span> Back</a>
       <h1>${p.title}</h1>
-      ${p.topGrid ? `<div class="pt-duo">${p.topGrid.map((x,k)=>`<figure class="${k ? "small" : "big"}"><img src="${x.src}"${x.full?` srcset="${x.src} 900w, ${x.full} 2400w" sizes="(min-width:800px) 600px, 76vw"`:""} alt="${x.alt}" data-g="${k}"></figure>`).join("")}</div>` : ""}
+      ${p.topGrid ? `<div class="pt-duo">${p.topGrid.map((x,k)=>`<figure class="${["big","small","big2","small2"][k] || "small"}"><img src="${x.src}"${x.full?` srcset="${x.src} 900w, ${x.full} 2400w" sizes="(min-width:800px) 600px, 76vw"`:""} alt="${x.alt}" data-g="${k}">${x.name ? `<figcaption>${x.name}</figcaption>` : ""}</figure>`).join("")}</div>` : ""}
       <div class="pt-flow">${html}</div>
       <div class="gal-nav">${prevLink(p)}<a class="next" href="#/p/${nxt.slug}" aria-label="Next gallery: ${nxt.title}">Next gallery <span aria-hidden="true">&#8594;</span></a></div>
     </article>`;
@@ -990,7 +1006,7 @@ function aboutHTML(){
       <p>I discovered dance in the suburbs of Chicago after a long bout with every sport under the sun. I knew every word to the <em>Wicked</em> soundtrack, and triumphantly gave my parents the silent treatment when they went to see the show without me. A few years later, when I was finally old enough to go, I sat in the back row of the balcony and knew that’s what I was meant to do with my life.</p>
       <p>That feeling took me to a dance studio in a strip mall, to Brigham Young University to study Musical Theatre, pervaded through a mission in Thailand, and brought me to New York City. I’ve done jobs I’m proud to have on my resume, but some of my favorite theatrical memories are the one-night-only concerts and the late-night kitchen rehearsals with best friends I'd met just weeks prior.</p>
       <p>It was on tour with <em>Moulin Rouge!</em> that I picked up a camera for the first time since high school. As a dancer, the show was physically taxing, and I needed a creative outlet that wasn’t throwing women in the air- so I found film. I learned how to shoot, and I fell in love with capturing our lives on the road. It reminded me of just how special our ‘mundane’ really was.</p>
-      <p>Performing and photography feel similar to the magic I felt while catching lightning bugs in mason jars as a little boy. As an actor, I’d like to think that if I were a lightning bug, I’d be so happy knowing my light brought someone else joy. But as a photographer, I get to hold up the jar and experience the glow, capturing the beauty I see in every person and production. Both are important to me. Both share a purpose in light.</p>
+      <p>Performing and photography feel similar to the magic I felt while catching lightning bugs in mason jars as a little boy. As an actor, I’d like to think that if I were a lightning bug, I’d be so happy knowing my light brought someone else joy. But as a photographer, I get to hold up the jar and experience the glow, capturing the beauty I see in every person and production. Both are important to me. Both capture and share light.</p>
     </article>`;
 }
 function renderAbout(){
